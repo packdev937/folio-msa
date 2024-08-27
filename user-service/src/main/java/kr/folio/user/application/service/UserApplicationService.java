@@ -8,6 +8,7 @@ import kr.folio.user.domain.core.event.UserCreatedEvent;
 import kr.folio.user.infrastructure.annotation.ApplicationService;
 import kr.folio.user.presentation.dto.request.CreateUserRequest;
 import kr.folio.user.presentation.dto.response.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,5 +30,15 @@ public class UserApplicationService implements UserApplicationUseCase {
         userMessagePublisher.publish(userCreatedEvent);
         return userDataMapper
             .toResponse(userCreatedEvent.user(), "User saved successfully!");
+    }
+
+    @Override
+    public ValidateUserResponse validateUserId(String id) {
+        return userApplicationHandler.validateDuplicatedId(id);
+    }
+
+    @Override
+    public ValidateUserResponse validateUserNickname(String nickname) {
+        return userApplicationHandler.validateDuplicatedNickname(nickname);
     }
 }
