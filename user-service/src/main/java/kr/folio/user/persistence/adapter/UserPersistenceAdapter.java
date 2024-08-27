@@ -21,13 +21,10 @@ public class UserPersistenceAdapter implements UserRepository {
 
     @Override
     public User createUser(User user) {
-        UserEntity savedUser = userJpaRepository.save(
-            userPersistenceMapper.toEntity(user)
-        );
-        System.out.println(savedUser.toString());
-
         return userPersistenceMapper.toDomain(
-            savedUser
+            userJpaRepository.save(
+	userPersistenceMapper.toEntity(user)
+            )
         );
     }
 
