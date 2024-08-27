@@ -31,6 +31,3 @@ public class UserApplicationService implements UserApplicationUseCase {
             .toResponse(userCreatedEvent.user(), "User saved successfully!");
     }
 }
-
-// 애플리케이션 서비스 -> 핸들러한테 위임
-// 핸들러 -> 도메인 서비스, Repository로 처리할 것들을 처리함

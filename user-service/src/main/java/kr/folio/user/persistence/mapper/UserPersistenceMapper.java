@@ -6,11 +6,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserPersistenceMapper {
+
     public UserEntity toEntity(User user) {
-        return null;
+        return UserEntity.builder()
+            .id(user.getId())
+            .nickname(user.getNickname())
+            .birthday(user.getBirthday())
+            .build();
     }
 
     public User toDomain(UserEntity userEntity) {
+        if (userEntity == null) {
+            return null;
+        }
         return User.builder()
             .id(userEntity.getId())
             .nickname(userEntity.getNickname())

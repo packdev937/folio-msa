@@ -5,6 +5,7 @@ import java.util.Optional;
 import kr.folio.user.application.ports.output.UserRepository;
 import kr.folio.user.domain.core.entity.User;
 import kr.folio.user.domain.core.exception.UserAlreadyExistsException;
+import kr.folio.user.persistence.entity.UserEntity;
 import kr.folio.user.persistence.mapper.UserPersistenceMapper;
 import kr.folio.user.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,27 +21,30 @@ public class UserPersistenceAdapter implements UserRepository {
 
     @Override
     public User createUser(User user) {
+        UserEntity savedUser = userJpaRepository.save(
+            userPersistenceMapper.toEntity(user)
+        );
+        System.out.println(savedUser.toString());
+
         return userPersistenceMapper.toDomain(
-            userJpaRepository.save(
-	userPersistenceMapper.toEntity(user)
-            )
+            savedUser
         );
     }
 
     @Override
     public Optional<User> findUserById(String id) {
-        return Optional.of(
+        return Optional.ofNullable(
             userPersistenceMapper.toDomain(
-	userJpaRepository.findById(id).get()
+	userJpaRepository.findById(id).orElse(null)
             )
         );
     }
 
     @Override
     public Optional<User> findUserByNickname(String nickname) {
-        return Optional.of(
+        return Optional.ofNullable(
             userPersistenceMapper.toDomain(
-	userJpaRepository.findByNickname(nickname).get()
+	userJpaRepository.findByNickname(nickname).orElse(null)
             )
         );
     }

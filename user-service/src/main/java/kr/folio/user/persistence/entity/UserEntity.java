@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tb_users")
 @Entity
@@ -32,8 +31,18 @@ public class UserEntity extends BaseEntity {
     private String message = "";
 
     @Column(name = "user_profile_image_url")
-    private String profileImageUrl = "default url";
+    private String profileImageUrl = "DEFAULT_URL";
 
     @Column(name = "user_birthday")
     private LocalDate birthday;
+
+    @Builder
+    public UserEntity(String id, String nickname, String message, String profileImageUrl,
+        LocalDate birthday) {
+        this.id = id;
+        this.nickname = nickname;
+        this.message = message;
+        this.profileImageUrl = profileImageUrl;
+        this.birthday = birthday;
+    }
 }
