@@ -10,6 +10,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/photo-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/photo-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/photo-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/photo-service.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/qr-service.iml" filepath="$PROJECT_DIR$/qr-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qr-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/qr-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qr-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/qr-service.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/user-service.iml" filepath="$PROJECT_DIR$/user-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service.test.iml" />
