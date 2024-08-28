@@ -34,7 +34,7 @@ public class UserApplicationService implements UserApplicationUseCase {
         UserCreatedEvent userCreatedEvent = userApplicationHandler.createUser(createUserRequest);
         userMessagePublisher.publish(userCreatedEvent);
         return userDataMapper
-            .toUpdateResponse(userCreatedEvent.user(), "User saved successfully!");
+            .toCreateResponse(userCreatedEvent.user(), "User saved successfully!");
     }
 
     @Override
@@ -63,7 +63,8 @@ public class UserApplicationService implements UserApplicationUseCase {
     }
 
     @Override
-    public UpdateUserResponse updateUserProfileImage(String id, UpdateProfileImageUrlRequest request) {
+    public UpdateUserResponse updateUserProfileImage(String id,
+        UpdateProfileImageUrlRequest request) {
         return userApplicationHandler.updateUserProfileImage(id, request);
     }
 
