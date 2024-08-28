@@ -3,10 +3,10 @@ server:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka
 
 spring:
   application:
@@ -16,14 +16,16 @@ spring:
       mvc:
         routes:
           - id : user-service
-            uri: http://localhost:8081/users/**
+            uri: lb://USER-SERVICE
             predicates:
               - Path=/users/**
+#            filters: ???? ? ?? ????? ?????
+#              - StripPrefix=1
           - id : photo-service
-            uri: http://localhost:8082/photo/**
+            uri: lb://photo-service
             predicates:
-              - Path=/photo
+              - Path=/photos/**
           - id : qr-service
-            uri: http://localhost:8083/qr/**
+            uri: lb://qr-service
             predicates:
-              - Path=/qr/**
+              - Path=/qrs/**

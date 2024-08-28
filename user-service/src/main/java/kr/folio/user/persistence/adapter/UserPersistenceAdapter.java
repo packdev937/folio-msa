@@ -1,11 +1,8 @@
 package kr.folio.user.persistence.adapter;
 
-import io.swagger.v3.oas.annotations.Operation;
 import java.util.Optional;
 import kr.folio.user.application.ports.output.UserRepository;
 import kr.folio.user.domain.core.entity.User;
-import kr.folio.user.domain.core.exception.UserAlreadyExistsException;
-import kr.folio.user.persistence.entity.UserEntity;
 import kr.folio.user.persistence.mapper.UserPersistenceMapper;
 import kr.folio.user.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +22,22 @@ public class UserPersistenceAdapter implements UserRepository {
             userJpaRepository.save(
 	userPersistenceMapper.toEntity(user)
             )
+        );
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return userPersistenceMapper.toDomain(
+            userJpaRepository.save(
+	userPersistenceMapper.toEntity(user)
+            )
+        );
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        userJpaRepository.delete(
+            userPersistenceMapper.toEntity(user)
         );
     }
 

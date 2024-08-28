@@ -3,6 +3,7 @@ package kr.folio.user.application.mapper;
 import kr.folio.user.domain.core.entity.User;
 import kr.folio.user.presentation.dto.request.CreateUserRequest;
 import kr.folio.user.presentation.dto.response.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.UpdateUserResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +17,11 @@ public class UserDataMapper {
             .build();
     }
 
-    public CreateUserResponse toResponse(User user, String message) {
+    public CreateUserResponse toCreateResponse(User user, String message) {
         return new CreateUserResponse(user.getId(), message);
+    }
+
+    public UpdateUserResponse toUpdateResponse(User user, String message) {
+        return new UpdateUserResponse(user.getId(), message);
     }
 }
