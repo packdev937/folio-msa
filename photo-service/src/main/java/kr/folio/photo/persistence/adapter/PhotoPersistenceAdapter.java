@@ -19,4 +19,12 @@ public class PhotoPersistenceAdapter implements PhotoRepository {
         return photoPersistenceMapper.toDomain(
             photoJpaRepository.save(photoPersistenceMapper.toEntity(user)));
     }
+
+    @Override
+    public Photo findPhotoById(Long photoId) {
+        return photoPersistenceMapper.toDomain(
+            photoJpaRepository.findById(photoId)
+	.orElse(null)
+        );
+    }
 }

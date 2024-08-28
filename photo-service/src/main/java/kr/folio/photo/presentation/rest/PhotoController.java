@@ -36,6 +36,9 @@ public class PhotoController implements PhotoControllerDocs {
 
     @Override
     public ResponseEntity<RetrievePhotoResponse> retrievePhoto(String requestUserId, Long photoId) {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>
+            (photoApplicationUseCase.retrievePhoto(requestUserId, photoId),
+            HttpStatus.OK
+        );
     }
 }

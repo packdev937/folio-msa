@@ -1,7 +1,7 @@
 package kr.folio.photo.presentation.dto.request;
 
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
+import java.util.ArrayList;
 import kr.folio.photo.domain.core.vo.BrandType;
 
 public record CreatePhotoRequest(
@@ -12,7 +12,7 @@ public record CreatePhotoRequest(
     @NotNull
     String photoUrl,
     @NotNull
-    List<String> userIds
+    ArrayList<String> userIds
 ) {
 
 }

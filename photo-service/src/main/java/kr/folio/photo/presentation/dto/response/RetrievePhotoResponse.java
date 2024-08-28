@@ -9,8 +9,6 @@ public record RetrievePhotoResponse(
     Long photoId,
     String photoUrl,
     BrandType brandType,
-    AccessRange accessRange,
-    LocalDateTime updatedAt,
     List<String> taggedUsers
 ) {
 
