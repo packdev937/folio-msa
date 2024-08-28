@@ -1,26 +1,28 @@
 package kr.folio.photo.persistence.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 import kr.folio.photo.domain.core.vo.BrandType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_photo")
 public class PhotoEntity extends BaseEntity {
@@ -39,29 +41,12 @@ public class PhotoEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BrandType brandType;
 
-    private PhotoEntity(String photoUrl, BrandType brandType) {
-        this.photoUrl = photoUrl;
-        this.brandType = brandType;
-    }
-
-    public static PhotoEntity create(
-        String photoUrl,
-        BrandType brandType
-    ) {
-        return new PhotoEntity(photoUrl, brandType);
-    }
-
-    public void increateViewcount() {
-        this.viewCount++;
-    }
-
-    public void updatePhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
+    @ElementCollection
+    private ArrayList<String> userIds = new ArrayList<>();
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 
     @Override

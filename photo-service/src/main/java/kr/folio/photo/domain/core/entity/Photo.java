@@ -1,5 +1,7 @@
 package kr.folio.photo.domain.core.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import kr.folio.photo.domain.core.vo.BrandType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +16,7 @@ public class Photo {
     private String photoUrl;
     private Long viewCount = 0L;
     private BrandType brandType;
+    private ArrayList<String> userIds;
 
     public void increateViewcount() {
         this.viewCount++;
