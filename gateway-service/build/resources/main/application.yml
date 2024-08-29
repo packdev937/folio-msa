@@ -19,6 +19,8 @@ spring:
             uri: lb://USER-SERVICE
             predicates:
               - Path=/users/**
+#            filters: ???? ? ?? ????? ?????
+#              - StripPrefix=1
           - id : photo-service
             uri: lb://photo-service
             predicates:
@@ -27,3 +29,7 @@ spring:
             uri: lb://qr-service
             predicates:
               - Path=/qrs/**
+          - id : feed-service
+            uri: lb://feed-service
+            predicates:
+              - Path=/feeds/**
