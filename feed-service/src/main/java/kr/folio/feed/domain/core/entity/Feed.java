@@ -19,6 +19,10 @@ public class Feed {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public void updateAccessRange(String updatedAccessRange) {
+        this.accessRange = AccessRange.from(updatedAccessRange);
+    }
+
     public static class TaggedUser {
 
         private String userId;

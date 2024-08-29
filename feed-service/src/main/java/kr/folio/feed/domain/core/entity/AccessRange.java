@@ -24,4 +24,16 @@ public enum AccessRange {
     public boolean isAccessible(AccessRange other) {
         return this.level >= other.level;
     }
+
+    public boolean isPublic() {
+        return this == PUBLIC;
+    }
+
+    public boolean isFriend() {
+        return this == FRIEND;
+    }
+
+    public boolean isPrivate() {
+        return this == PRIVATE;
+    }
 }

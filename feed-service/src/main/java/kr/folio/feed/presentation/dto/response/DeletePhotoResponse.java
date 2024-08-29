@@ -1,5 +1,12 @@
 package kr.folio.feed.presentation.dto.response;
 
-public record DeletePhotoResponse() {
+/**
+ * @param feedId  삭제 하는 FeedId
+ * @param message 삭제 성공 메세지
+ */
+public record DeletePhotoResponse(
+    Long feedId,
+    String message
+) {
 
 }

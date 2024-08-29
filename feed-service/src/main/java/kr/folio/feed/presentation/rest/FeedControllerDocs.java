@@ -54,7 +54,7 @@ public interface FeedControllerDocs {
     // 피드 전체 조회
     @Operation(summary = "피드 전체 조회", description = "사용자의 피드를 전체 조회 합니다.")
     @GetMapping
-    ResponseEntity<FeedsResponse> retrieveRecommendationPhoto(
+    ResponseEntity<FeedsResponse> retrieveFeeds(
         @CurrentUserId String requestUserId
     );
 
@@ -62,6 +62,7 @@ public interface FeedControllerDocs {
     @Operation(summary = "사용자 피드 조회", description = "사용자의 피드를 전체 조회 합니다.")
     @GetMapping("/user/{userId}")
     ResponseEntity<FeedsResponse> retrieveUserFeeds(
+        @CurrentUserId String requestUserId,
         @PathVariable(name = "userId") String userId
     );
 }

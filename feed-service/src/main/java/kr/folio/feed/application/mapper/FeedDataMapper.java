@@ -1,9 +1,11 @@
 package kr.folio.feed.application.mapper;
 
+import java.util.List;
 import kr.folio.feed.domain.core.entity.AccessRange;
 import kr.folio.feed.domain.core.entity.Feed;
 import kr.folio.feed.persistence.entity.FeedEntity;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
+import kr.folio.feed.presentation.dto.response.FeedsResponse;
 import kr.folio.feed.presentation.dto.response.RetrieveFeedResponse;
 import org.springframework.stereotype.Component;
 
@@ -27,5 +29,11 @@ public class FeedDataMapper {
             .taggedUsers(feed.getTaggedUsers())
             .createdAt(feed.getCreatedAt())
             .build();
+    }
+
+    public FeedsResponse toFeedsResponse(List<Feed> feeds) {
+        return new FeedsResponse(feeds.stream()
+            .map(this::toRetrieveFeedResponse)
+            .toList());
     }
 }

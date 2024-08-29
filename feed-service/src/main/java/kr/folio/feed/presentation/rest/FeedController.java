@@ -48,31 +48,35 @@ public class FeedController implements FeedControllerDocs {
     @Override
     public ResponseEntity<UpdateFeedResponse> updateFeedAccessRange(String requestUserId,
         UpdateFeedAccessRangeRequest request) {
-        return null;
+        return new ResponseEntity<>(
+            feedApplicationUseCase.updateFeedAccessRange(requestUserId, request)
+            , HttpStatus.OK
+        );
     }
 
     @Override
     public ResponseEntity<DeletePhotoResponse> deletePhoto(Long photoId) {
-        return null;
+        return new ResponseEntity<>(
+            feedApplicationUseCase.deleteFeed(photoId)
+            , HttpStatus.OK
+        );
     }
 
     @Override
-    public ResponseEntity<FeedsResponse> retrieveRecommendationPhoto(String requestUserId) {
-        return null;
+    public ResponseEntity<FeedsResponse> retrieveFeeds(String requestUserId) {
+        return new ResponseEntity<>(
+            feedApplicationUseCase.retrieveFeeds(requestUserId)
+            , HttpStatus.OK
+        );
     }
 
     @Override
-    public ResponseEntity<FeedsResponse> retrieveUserFeeds(String userId) {
-        return null;
+    public ResponseEntity<FeedsResponse> retrieveUserFeeds(
+        String requestUserId,
+        String userId) {
+        return new ResponseEntity<>(
+            feedApplicationUseCase.retrieveUserFeeds(requestUserId, userId)
+            , HttpStatus.OK
+        );
     }
-
-    // 피드 생성 -> 포토 서비스에 해당 photoId로 되어 있는 정보로 요청하면 그거에 맞춰 생성
-
-    // 피드 상세 조회 -> 포토 서비스에 해당 photoId로 되어 있는 정보를 불러옴
-
-    // 피드 삭제 -> 해당 피드를 삭제함
-
-    // 피드 업데이트 -> AccessRange에 따라 수정 가능한 정보가 다름
-
-    // 피드 전체 조회 -> 해당 유저에 대한 피드 전체 조회 요청이 들어오면 요청해줌
 }

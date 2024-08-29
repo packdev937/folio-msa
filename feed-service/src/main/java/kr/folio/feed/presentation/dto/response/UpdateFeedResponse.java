@@ -1,5 +1,8 @@
 package kr.folio.feed.presentation.dto.response;
 
-public record UpdateFeedResponse() {
+public record UpdateFeedResponse(
+    Long feedId,
+    String message
+) {
 
 }
