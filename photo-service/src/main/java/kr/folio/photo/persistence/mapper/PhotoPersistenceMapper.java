@@ -9,7 +9,7 @@ public class PhotoPersistenceMapper {
 
     public PhotoEntity toEntity(Photo photo) {
         return PhotoEntity.builder()
-            .photoUrl(photo.getPhotoUrl())
+            .photoUrl(photo.getPhotoImageUrl())
             .brandType(photo.getBrandType())
             .userIds(photo.getUserIds())
             .viewCount(photo.getViewCount())
@@ -24,7 +24,7 @@ public class PhotoPersistenceMapper {
         return Photo.builder()
             .id(photoEntity.getId())
             .brandType(photoEntity.getBrandType())
-            .photoUrl(photoEntity.getPhotoUrl())
+            .photoImageUrl(photoEntity.getPhotoUrl())
             .userIds(photoEntity.getUserIds())
             .viewCount(photoEntity.getViewCount())
             .build();
