@@ -1,6 +1,7 @@
 package kr.folio.feed.presentation.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * CreateFeedRequest
@@ -15,7 +16,9 @@ public record CreateFeedRequest(
     @NotNull
     Long photoId,
     @NotNull
-    String photoImageUrl
+    String photoImageUrl,
+    @NotNull
+    List<String> taggedUserIds
 ) {
 
 }

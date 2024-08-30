@@ -13,7 +13,7 @@ public interface PhotoApplicationUseCase {
 
     CreatePhotoResponse createPhoto(@Valid CreatePhotoRequest createPhotoRequest);
 
-    RetrievePhotoResponse retrievePhoto(String requestUserId, Long photoId);
+    RetrievePhotoResponse retrievePhoto(Long photoId);
 
     UpdatePhotoResponse updatePhotoImage(String requestUserId, @Valid UpdatePhotoImageRequest updatePhotoRequest);
 

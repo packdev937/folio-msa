@@ -11,11 +11,9 @@ import kr.folio.photo.application.ports.input.PhotoApplicationUseCase;
 import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
 import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
-import kr.folio.photo.domain.core.event.RetrievedPhotoEvent;
 import kr.folio.photo.domain.core.vo.AgeGroup;
 import kr.folio.photo.infrastructure.annotation.ApplicationService;
 import kr.folio.photo.infrastructure.client.UserServiceClient;
-import kr.folio.photo.persistence.entity.PhotoEntity;
 import kr.folio.photo.presentation.dto.request.CreatePhotoRequest;
 import kr.folio.photo.presentation.dto.request.UpdatePhotoImageRequest;
 import kr.folio.photo.presentation.dto.response.CreatePhotoResponse;
@@ -27,7 +25,6 @@ import kr.folio.photo.presentation.dto.response.UpdatePhotoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,9 +41,6 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
     @Qualifier("CreatedPhotoEventKafkaPublisher")
     private final PhotoMessagePublisher createdPhotoMessagePublisher;
 
-    @Qualifier("RetrievedPhotoEventKafkaPublisher")
-    private final PhotoMessagePublisher retrievedPhotoMessagePublisher;
-
     @Override
     public CreatePhotoResponse createPhoto(CreatePhotoRequest createPhotoRequest) {
         CreatedPhotoEvent createdPhotoEvent = photoApplicationHandler
@@ -55,18 +49,13 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
         createdPhotoMessagePublisher.publish(createdPhotoEvent);
 
         return photoDataMapper
-            .toCreateResponse(createdPhotoEvent.photo(), "포토가 정상적으로 생성되었습니다.");
+            .toCreateResponse(createdPhotoEvent.createdPhotoEventDTO().photoId(),
+	"포토가 정상적으로 생성되었습니다.");
     }
 
     @Override
-    public RetrievePhotoResponse retrievePhoto(
-        String requestUserId,
-        Long photoId) {
-        // todo : AccessRange를 조회하는 로직
-        RetrievedPhotoEvent retrievedPhotoEvent = photoApplicationHandler
-            .retrievePhoto(requestUserId, photoId);
-        retrievedPhotoMessagePublisher.publish(retrievedPhotoEvent);
-        return photoDataMapper.toRetrieveResponse(retrievedPhotoEvent.photo());
+    public RetrievePhotoResponse retrievePhoto(Long photoId) {
+        return photoApplicationHandler.retrievePhoto(photoId);
     }
 
     @Override

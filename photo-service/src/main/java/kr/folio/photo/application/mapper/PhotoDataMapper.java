@@ -20,8 +20,8 @@ public class PhotoDataMapper {
             .build();
     }
 
-    public CreatePhotoResponse toCreateResponse(Photo photo, String message) {
-        return new CreatePhotoResponse(photo.getPhotoId(), message);
+    public CreatePhotoResponse toCreateResponse(Long photoId, String message) {
+        return new CreatePhotoResponse(photoId, message);
     }
 
     public RetrievePhotoResponse toRetrieveResponse(Photo photo) {

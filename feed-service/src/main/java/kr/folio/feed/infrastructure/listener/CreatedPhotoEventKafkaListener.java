@@ -40,7 +40,8 @@ public class CreatedPhotoEventKafkaListener implements GenericEventListener<Crea
 	    new CreateFeedRequest(
 	        userId,
 	        createdPhotoEvent.createdPhotoEventDTO().photoId(),
-	        createdPhotoEvent.createdPhotoEventDTO().photoImageUrl()
+	        createdPhotoEvent.createdPhotoEventDTO().photoImageUrl(),
+	        createdPhotoEvent.createdPhotoEventDTO().taggedUserIds()
 	    )
 	)
             );

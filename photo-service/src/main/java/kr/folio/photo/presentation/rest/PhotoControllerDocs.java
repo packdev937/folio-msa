@@ -34,7 +34,6 @@ public interface PhotoControllerDocs {
     @Operation(summary = "포토 상세 조회", description = "포토를 상제 조회합니다. Feed-Service에 의해 호출됩니다.")
     @GetMapping("/{photoId}")
     ResponseEntity<RetrievePhotoResponse> retrievePhoto(
-        @CurrentUserId String requestUserId,
         @PathVariable(name = "photoId") Long photoId
     );
 

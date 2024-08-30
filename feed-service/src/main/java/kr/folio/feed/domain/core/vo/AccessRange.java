@@ -1,4 +1,4 @@
-package kr.folio.feed.domain.core.entity;
+package kr.folio.feed.domain.core.vo;
 
 import java.util.Arrays;
 import lombok.Getter;

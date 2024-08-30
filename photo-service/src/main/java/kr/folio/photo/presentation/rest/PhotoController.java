@@ -37,6 +37,7 @@ public class PhotoController implements PhotoControllerDocs {
     @Override
     public ResponseEntity<CreatePhotoResponse> createPhoto(
         CreatePhotoRequest createPhotoRequest) {
+        log.info("Creating photo : uploadUserId = {}", createPhotoRequest.requestUserId());
 
         return new ResponseEntity<>(
             photoApplicationUseCase.createPhoto(createPhotoRequest)
@@ -45,9 +46,11 @@ public class PhotoController implements PhotoControllerDocs {
     }
 
     @Override
-    public ResponseEntity<RetrievePhotoResponse> retrievePhoto(String requestUserId, Long photoId) {
+    public ResponseEntity<RetrievePhotoResponse> retrievePhoto(Long photoId) {
+        log.info("Retrieving photo : requestUserId = {}, photoId = {}", photoId);
+
         return new ResponseEntity<>(
-            photoApplicationUseCase.retrievePhoto(requestUserId, photoId),
+            photoApplicationUseCase.retrievePhoto(photoId),
             HttpStatus.OK
         );
     }

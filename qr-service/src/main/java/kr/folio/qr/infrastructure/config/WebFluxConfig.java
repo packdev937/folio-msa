@@ -1,4 +1,4 @@
-package kr.folio.qr.infrastructure.client;
+package kr.folio.qr.infrastructure.config;
 
 import kr.folio.qr.infrastructure.resolver.UserIdParameterResolver;
 import org.springframework.context.annotation.Bean;

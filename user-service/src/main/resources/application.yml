@@ -20,3 +20,8 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password:
+
+#      Feign Client 로그 처리
+logging:
+  level:
+    kr.folio.user.infrastructure.client: DEBUG

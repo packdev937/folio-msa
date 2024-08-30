@@ -1,18 +1,16 @@
 package kr.folio.photo.application.handler;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoRepository;
 import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
-import kr.folio.photo.domain.core.event.RetrievedPhotoEvent;
 import kr.folio.photo.domain.service.PhotoDomainUseCase;
 import kr.folio.photo.presentation.dto.request.CreatePhotoRequest;
 import kr.folio.photo.presentation.dto.request.UpdatePhotoImageRequest;
 import kr.folio.photo.presentation.dto.response.DeletePhotoResponse;
+import kr.folio.photo.presentation.dto.response.RetrievePhotoResponse;
 import kr.folio.photo.presentation.dto.response.UpdatePhotoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +56,7 @@ public class PhotoApplicationHandler {
     }
 
     // todo : 피드에서 요청 되는 부분
-    public RetrievedPhotoEvent retrievePhoto(String requestUserId, Long photoId) {
-        // todo : 요청하는 사람에 따라 구분되는 로직
+    public RetrievePhotoResponse retrievePhoto(Long photoId) {
         Photo retrievedPhoto = photoRepository.findPhotoById(photoId).orElse(null);
         if (retrievedPhoto == null) {
             log.error("Could not find photo with id: {}", photoId);
@@ -68,8 +65,7 @@ public class PhotoApplicationHandler {
         }
 
         log.info("Returning RetrievedPhotoEvent for photo id: {}", photoId);
-        return new RetrievedPhotoEvent(retrievedPhoto, requestUserId,
-            ZonedDateTime.now(ZoneId.of(UTC)));
+        return photoDataMapper.toRetrieveResponse(retrievedPhoto);
     }
 
     public UpdatePhotoResponse updatePhotoImage(String requestUserId,

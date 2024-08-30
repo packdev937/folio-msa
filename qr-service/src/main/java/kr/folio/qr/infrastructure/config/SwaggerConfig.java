@@ -1,4 +1,4 @@
-package kr.folio.qr.infrastructure.client;
+package kr.folio.qr.infrastructure.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
