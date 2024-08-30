@@ -6,9 +6,9 @@ import kr.folio.feed.infrastructure.annotation.CurrentUserId;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
 import kr.folio.feed.presentation.dto.response.CreateFeedResponse;
-import kr.folio.feed.presentation.dto.response.DeletePhotoResponse;
+import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import kr.folio.feed.presentation.dto.response.FeedsResponse;
-import kr.folio.feed.presentation.dto.response.RetrieveFeedResponse;
+import kr.folio.feed.presentation.dto.response.RetrieveFeedDetailResponse;
 import kr.folio.feed.presentation.dto.response.UpdateFeedResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +33,7 @@ public interface FeedControllerDocs {
 
     @Operation(summary = "피드 상세 조회", description = "피드를 상세 조회합니다. 요청한 유저에 따라 반환되는 정보가 다를 수 있습니다.")
     @GetMapping("/{feedId}")
-    ResponseEntity<RetrieveFeedResponse> retrieveFeed(
+    ResponseEntity<RetrieveFeedDetailResponse> retrieveFeedDetail(
         @CurrentUserId String requestUserId,
         @PathVariable(name = "feedId") Long feedId
     );
@@ -46,19 +46,17 @@ public interface FeedControllerDocs {
     );
 
     @Operation(summary = "피드를 삭제 합니다", description = "피드 삭제 권한 확인 후 피드를 삭제합니다. 만약 마지막 피드라면 Photo-Service에 포토 삭제 요청을 진행합니다. ")
-    @DeleteMapping("/{photoId}")
-    ResponseEntity<DeletePhotoResponse> deletePhoto(
-        @PathVariable(name = "photoId") Long photoId
+    @DeleteMapping("/{feedId}")
+    ResponseEntity<DeleteFeedResponse> deleteFeed(
+        @PathVariable(name = "feedId") Long feedId
     );
 
-    // 피드 전체 조회
     @Operation(summary = "피드 전체 조회", description = "사용자의 피드를 전체 조회 합니다.")
     @GetMapping
     ResponseEntity<FeedsResponse> retrieveFeeds(
         @CurrentUserId String requestUserId
     );
 
-    // 사용자 피드 조회
     @Operation(summary = "사용자 피드 조회", description = "사용자의 피드를 전체 조회 합니다.")
     @GetMapping("/user/{userId}")
     ResponseEntity<FeedsResponse> retrieveUserFeeds(
