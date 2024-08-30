@@ -11,12 +11,12 @@ import kr.folio.user.presentation.dto.request.UpdateBirthdayRequest;
 import kr.folio.user.presentation.dto.request.UpdateMessageRequest;
 import kr.folio.user.presentation.dto.request.UpdateNicknameRequest;
 import kr.folio.user.presentation.dto.request.UpdateProfileImageUrlRequest;
-import kr.folio.user.presentation.dto.response.CreateUserResponse;
-import kr.folio.user.presentation.dto.response.DeleteUserResponse;
-import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
-import kr.folio.user.presentation.dto.response.UpdateUserResponse;
-import kr.folio.user.presentation.dto.response.UserProfileResponse;
-import kr.folio.user.presentation.dto.response.ValidateUserResponse;
+import kr.folio.user.presentation.dto.response.user.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.user.DeleteUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserHomeResponse;
+import kr.folio.user.presentation.dto.response.user.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserProfileResponse;
+import kr.folio.user.presentation.dto.response.user.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,16 +28,10 @@ public class UserApplicationService implements UserApplicationUseCase {
 
     private final UserApplicationHandler userApplicationHandler;
     private final UserDataMapper userDataMapper;
-    @Qualifier("userCreateEventKafkaPublisher")
-    private final UserMessagePublisher userMessagePublisher;
 
     @Override
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
-        CreatedUserEvent createdUserEvent = userApplicationHandler.createUser(createUserRequest);
-        userMessagePublisher.publish(createdUserEvent);
-
-        return userDataMapper
-            .toCreateResponse(createdUserEvent.user(), "가입이 완료 되었습니다.");
+        return userApplicationHandler.createUser(createUserRequest);
     }
 
     @Override
@@ -81,7 +75,7 @@ public class UserApplicationService implements UserApplicationUseCase {
     }
 
     @Override
-    public RetrieveUserHomeResponse retrieveUserHome(String requestUserId) {
+    public UserHomeResponse retrieveUserHome(String requestUserId) {
         return userApplicationHandler.retrieveUserHome(requestUserId);
     }
 

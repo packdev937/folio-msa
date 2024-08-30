@@ -8,12 +8,12 @@ import kr.folio.user.presentation.dto.request.UpdateBirthdayRequest;
 import kr.folio.user.presentation.dto.request.UpdateMessageRequest;
 import kr.folio.user.presentation.dto.request.UpdateNicknameRequest;
 import kr.folio.user.presentation.dto.request.UpdateProfileImageUrlRequest;
-import kr.folio.user.presentation.dto.response.CreateUserResponse;
-import kr.folio.user.presentation.dto.response.DeleteUserResponse;
-import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
-import kr.folio.user.presentation.dto.response.UpdateUserResponse;
-import kr.folio.user.presentation.dto.response.UserProfileResponse;
-import kr.folio.user.presentation.dto.response.ValidateUserResponse;
+import kr.folio.user.presentation.dto.response.user.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.user.DeleteUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserHomeResponse;
+import kr.folio.user.presentation.dto.response.user.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserProfileResponse;
+import kr.folio.user.presentation.dto.response.user.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -117,6 +117,7 @@ public class UserController implements UserControllerDocs {
     @Override
     public ResponseEntity<DeleteUserResponse> deleteUser(String requestUserId) {
         log.info("Deleting user with id : {}", requestUserId);
+
         return new ResponseEntity<>(
             userApplicationUseCase.deleteUser(requestUserId),
             HttpStatus.OK
@@ -124,7 +125,7 @@ public class UserController implements UserControllerDocs {
     }
 
     @Override
-    public ResponseEntity<RetrieveUserHomeResponse> retrieveUserHome(String requestUserId) {
+    public ResponseEntity<UserHomeResponse> retrieveUserHome(String requestUserId) {
         log.info("Retrieving user home with id : {}", requestUserId);
 
         return new ResponseEntity<>(

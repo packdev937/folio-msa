@@ -8,12 +8,12 @@ import kr.folio.user.presentation.dto.request.UpdateBirthdayRequest;
 import kr.folio.user.presentation.dto.request.UpdateMessageRequest;
 import kr.folio.user.presentation.dto.request.UpdateNicknameRequest;
 import kr.folio.user.presentation.dto.request.UpdateProfileImageUrlRequest;
-import kr.folio.user.presentation.dto.response.CreateUserResponse;
-import kr.folio.user.presentation.dto.response.DeleteUserResponse;
-import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
-import kr.folio.user.presentation.dto.response.UpdateUserResponse;
-import kr.folio.user.presentation.dto.response.UserProfileResponse;
-import kr.folio.user.presentation.dto.response.ValidateUserResponse;
+import kr.folio.user.presentation.dto.response.user.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.user.DeleteUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserHomeResponse;
+import kr.folio.user.presentation.dto.response.user.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserProfileResponse;
+import kr.folio.user.presentation.dto.response.user.ValidateUserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -74,7 +74,7 @@ public interface UserControllerDocs {
 
     @Operation(summary = "유저 홈 조회", description = "유저 홈을 조회합니다.")
     @GetMapping("/home")
-    ResponseEntity<RetrieveUserHomeResponse> retrieveUserHome(
+    ResponseEntity<UserHomeResponse> retrieveUserHome(
         @CurrentUserId String requestUserId);
 
     @Operation(summary = "유저 마이페이지 조회", description = "유저 마이페이지를 조회합니다.")

@@ -1,5 +1,6 @@
 package kr.folio.user.application.handler;
 
+import feign.FeignException;
 import java.util.function.Consumer;
 import kr.folio.user.application.mapper.UserDataMapper;
 import kr.folio.user.application.ports.output.UserRepository;
@@ -11,12 +12,13 @@ import kr.folio.user.infrastructure.client.PhotoServiceClient;
 import kr.folio.user.infrastructure.exception.UserAlreadyExistsException;
 import kr.folio.user.infrastructure.exception.UserNotFoundException;
 import kr.folio.user.presentation.dto.request.*;
-import kr.folio.user.presentation.dto.response.DeleteUserResponse;
-import kr.folio.user.presentation.dto.response.FeedsResponse;
-import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
-import kr.folio.user.presentation.dto.response.UpdateUserResponse;
-import kr.folio.user.presentation.dto.response.UserProfileResponse;
-import kr.folio.user.presentation.dto.response.ValidateUserResponse;
+import kr.folio.user.presentation.dto.response.user.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.user.DeleteUserResponse;
+import kr.folio.user.presentation.dto.response.feed.FeedsResponse;
+import kr.folio.user.presentation.dto.response.user.UserHomeResponse;
+import kr.folio.user.presentation.dto.response.user.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserProfileResponse;
+import kr.folio.user.presentation.dto.response.user.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -34,10 +36,8 @@ public class UserApplicationHandler {
     private final FeedServiceClient feedServiceClient;
 
     @Transactional
-    public CreatedUserEvent createUser(CreateUserRequest createUserRequest) {
+    public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
         User user = userDataMapper.toDomain(createUserRequest);
-        CreatedUserEvent userCreatedEvent = userDomainUseCase.validateUser(
-            user);
         User savedUser = userRepository.createUser(user);
 
         if (savedUser == null) {
@@ -47,14 +47,20 @@ public class UserApplicationHandler {
         }
 
         log.info("Returning CreatedUserEvent for user id: {}", createUserRequest.id());
-        return userCreatedEvent;
+        return new CreateUserResponse(savedUser.getId(), "가입이 완료 되었습니다.");
     }
 
-    public RetrieveUserHomeResponse retrieveUserHome(String requestUserId) {
+    public UserHomeResponse retrieveUserHome(String requestUserId) {
         UserProfileResponse userProfileResponse = retrieveUserProfile(requestUserId);
-        FeedsResponse feeds = feedServiceClient.retrieveFeeds(requestUserId);
+        FeedsResponse feeds = null;
 
-        log.info("Returning RetrieveUserHomeResponse for user id: {}", requestUserId);
+        try {
+            feeds = feedServiceClient.retrieveFeeds(requestUserId);
+        } catch (FeignException feignException) {
+            log.error("Could not retrieve feeds for user id: {} in UserApplicationHandler.java");
+        }
+
+        log.info("Returning UserHomeResponse for user id: {}", requestUserId);
         return userDataMapper.toRetrieveUserHomeResponse(userProfileResponse, feeds);
     }
 

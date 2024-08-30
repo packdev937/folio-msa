@@ -1,4 +1,4 @@
-package kr.folio.user.presentation.dto.response;
+package kr.folio.user.presentation.dto.response.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.folio.user.domain.core.entity.User;

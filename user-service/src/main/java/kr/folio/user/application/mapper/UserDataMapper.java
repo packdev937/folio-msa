@@ -2,11 +2,11 @@ package kr.folio.user.application.mapper;
 
 import kr.folio.user.domain.core.entity.User;
 import kr.folio.user.presentation.dto.request.CreateUserRequest;
-import kr.folio.user.presentation.dto.response.CreateUserResponse;
-import kr.folio.user.presentation.dto.response.FeedsResponse;
-import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
-import kr.folio.user.presentation.dto.response.UpdateUserResponse;
-import kr.folio.user.presentation.dto.response.UserProfileResponse;
+import kr.folio.user.presentation.dto.response.user.CreateUserResponse;
+import kr.folio.user.presentation.dto.response.feed.FeedsResponse;
+import kr.folio.user.presentation.dto.response.user.UserHomeResponse;
+import kr.folio.user.presentation.dto.response.user.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.user.UserProfileResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,8 +28,8 @@ public class UserDataMapper {
         return new UpdateUserResponse(user.getId(), message);
     }
 
-    public RetrieveUserHomeResponse toRetrieveUserHomeResponse(UserProfileResponse userProfileResponse, FeedsResponse feeds) {
-        return RetrieveUserHomeResponse.builder()
+    public UserHomeResponse toRetrieveUserHomeResponse(UserProfileResponse userProfileResponse, FeedsResponse feeds) {
+        return UserHomeResponse.builder()
             .userProfile(userProfileResponse)
             .feeds(feeds)
             .build();
