@@ -7,7 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import kr.folio.feed.domain.core.entity.AccessRange;
+import kr.folio.feed.domain.core.vo.AccessRange;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +31,9 @@ public class FeedEntity extends BaseEntity {
 
     @Column(name = "photo_id")
     private Long photoId;
+
+    @Column(name = "photo_image_url")
+    private String photoImageUrl;
 
     @Enumerated(EnumType.STRING)
     private AccessRange accessRange = AccessRange.PUBLIC;

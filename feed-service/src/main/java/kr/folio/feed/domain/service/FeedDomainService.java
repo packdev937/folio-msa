@@ -1,10 +1,15 @@
 package kr.folio.feed.domain.service;
 
-import kr.folio.feed.domain.core.event.CreatedFeedEvent;
-import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FeedDomainService implements FeedDomainUseCase {
 
+    @Override
+    public boolean isPhotoDeletable(int feedCount) {
+        if (feedCount == 0) {
+            return true;
+        }
+        return false;
+    }
 }

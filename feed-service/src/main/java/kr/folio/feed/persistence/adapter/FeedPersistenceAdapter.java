@@ -26,13 +26,15 @@ public class FeedPersistenceAdapter implements FeedRepository {
     }
 
     @Override
-    public Optional<Feed> findFeedById(Long feedId) {
+    public Optional<Feed> findByFeedIdAndRequestUserId(Long feedId, String requestUserId) {
         return Optional.ofNullable(
             feedPersistenceMapper.toDomain(
-	feedJpaRepository.findFeedById(feedId).orElseThrow(IllegalArgumentException::new)
+	feedJpaRepository.findByFeedIdAndRequestUserId(feedId, requestUserId)
+	    .orElse(null)
             )
         );
     }
+
 
     @Override
     public void deleteFeedById(Long photoId) {
@@ -53,6 +55,16 @@ public class FeedPersistenceAdapter implements FeedRepository {
     public List<Feed> findFeedsByUserId(String requestUserId) {
         return feedPersistenceMapper.toDomainList(
             feedJpaRepository.findFeedsByUserId(requestUserId)
+        );
+    }
+
+    @Override
+    public Optional<Feed> findFeedById(Long feedId) {
+        return Optional.ofNullable(
+            feedPersistenceMapper.toDomain(
+	feedJpaRepository.findById(feedId)
+	    .orElse(null)
+            )
         );
     }
 }

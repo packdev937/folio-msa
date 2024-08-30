@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 public class FeedPersistenceMapper {
 
     public Feed toDomain(FeedEntity feedEntity) {
+        if (feedEntity == null) {
+            return null;
+        }
         return Feed.builder()
             .id(feedEntity.getId())
             .userId(feedEntity.getUserId())
@@ -26,8 +29,8 @@ public class FeedPersistenceMapper {
             .build();
     }
 
-    public List<Feed> toDomainList(List<FeedEntity> feedsByUserId) {
-        return feedsByUserId.stream()
+    public List<Feed> toDomainList(List<FeedEntity> feeds) {
+        return feeds.stream()
             .map(this::toDomain)
             .collect(Collectors.toList());
     }

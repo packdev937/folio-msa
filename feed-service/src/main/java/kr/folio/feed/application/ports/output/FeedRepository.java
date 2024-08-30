@@ -8,7 +8,7 @@ public interface FeedRepository {
 
     Feed save(Feed feed);
 
-    Optional<Feed> findFeedById(Long aLong);
+    Optional<Feed> findByFeedIdAndRequestUserId(Long feedId, String requestUserId);
 
     void deleteFeedById(Long photoId);
 
@@ -18,4 +18,5 @@ public interface FeedRepository {
 
     List<Feed> findFeedsByUserId(String requestUserId);
 
+    Optional<Feed> findFeedById(Long feedId);
 }

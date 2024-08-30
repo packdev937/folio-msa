@@ -2,6 +2,8 @@ package kr.folio.feed.domain.core.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import kr.folio.feed.domain.core.vo.AccessRange;
+import kr.folio.feed.domain.core.vo.TaggedUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,19 +16,13 @@ public class Feed {
     private Long id;
     private String userId;
     private Long photoId;
+    private String photoImageUrl;
     private AccessRange accessRange;
-    private List<TaggedUser> taggedUsers;
+    private List<String> taggedUsers;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public void updateAccessRange(String updatedAccessRange) {
         this.accessRange = AccessRange.from(updatedAccessRange);
-    }
-
-    public static class TaggedUser {
-
-        private String userId;
-        private String name;
-        private String profileImageUrl;
     }
 }

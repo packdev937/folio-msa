@@ -1,6 +1,6 @@
 package kr.folio.feed.application.ports.output;
 
-public interface FeedMessagePublisher<T> {
+public interface GenericEventPublisher<T> {
 
     void publish(T event);
 }
