@@ -9,6 +9,7 @@ import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
 import kr.folio.photo.domain.core.vo.AgeGroup;
 import kr.folio.photo.infrastructure.annotation.DomainService;
+import kr.folio.photo.presentation.dto.event.CreatedPhotoEventDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 @RequiredArgsConstructor
 @DomainService
 public class PhotoDomainService implements PhotoDomainUseCase {
+
     private final String UTC = "UTC";
     private static final double W1 = 0.5; // Age Difference Weight
     private static final double W2 = 0.5; // View Count Weight
@@ -26,8 +28,8 @@ public class PhotoDomainService implements PhotoDomainUseCase {
         Map<String, Integer> userAges, AgeGroup ageGroup) {
         return photos.stream()
             .sorted((p1, p2) -> Double.compare(
-                calculateScore(p2, userAges, ageGroup),
-                calculateScore(p1, userAges, ageGroup))
+	calculateScore(p2, userAges, ageGroup),
+	calculateScore(p1, userAges, ageGroup))
             )
             .limit(100)
             .collect(Collectors.toList());
@@ -56,8 +58,13 @@ public class PhotoDomainService implements PhotoDomainUseCase {
     }
 
     @Override
-    public CreatedPhotoEvent validatePhoto(Photo photo) {
-        // todo : 순수 도메인 로직을 검증하는 공간
-        return new CreatedPhotoEvent(photo, ZonedDateTime.now(ZoneId.of(UTC)));
+    public CreatedPhotoEvent createPhotoEvent(Photo photo) {
+        CreatedPhotoEventDTO createdPhotoEventDTO =
+            new CreatedPhotoEventDTO(
+	photo.getPhotoId(),
+	photo.getPhotoImageUrl(),
+	photo.getUserIds());
+
+        return new CreatedPhotoEvent(createdPhotoEventDTO, ZonedDateTime.now(ZoneId.of(UTC)));
     }
 }

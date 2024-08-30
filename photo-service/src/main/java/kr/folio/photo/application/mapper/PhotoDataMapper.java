@@ -1,5 +1,6 @@
 package kr.folio.photo.application.mapper;
 
+import java.util.List;
 import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.presentation.dto.request.CreatePhotoRequest;
 import kr.folio.photo.presentation.dto.response.CreatePhotoResponse;
@@ -11,30 +12,30 @@ import org.springframework.stereotype.Component;
 @Component
 public class PhotoDataMapper {
 
-    public Photo toDomain(CreatePhotoRequest createUserRequest) {
+    public Photo toDomain(CreatePhotoRequest createUserRequest, List<String> userIds) {
         return Photo.builder()
             .brandType(createUserRequest.brandType())
             .photoImageUrl(createUserRequest.photoImageUrl())
-            .userIds(createUserRequest.userIds())
+            .userIds(userIds)
             .build();
     }
 
     public CreatePhotoResponse toCreateResponse(Photo photo, String message) {
-        return new CreatePhotoResponse(photo.getId(), message);
+        return new CreatePhotoResponse(photo.getPhotoId(), message);
     }
 
     public RetrievePhotoResponse toRetrieveResponse(Photo photo) {
         return new RetrievePhotoResponse(
-            photo.getId(),
+            photo.getPhotoId(),
             photo.getPhotoImageUrl(),
             photo.getBrandType(),
-            photo.getUserIds()
+            photo.getUserIds(),
+            photo.getUpdatedAt()
         );
-        // todo : taggerUser와 updatedAt은 나중에 추가할 예정
     }
 
     public UpdatePhotoResponse toUpdateResponse(Photo updatedPhoto, String message) {
-        return new UpdatePhotoResponse(updatedPhoto.getId(), message);
+        return new UpdatePhotoResponse(updatedPhoto.getPhotoId(), message);
     }
 
     public DeletePhotoResponse toDeleteResponse(Long photoId, String message) {

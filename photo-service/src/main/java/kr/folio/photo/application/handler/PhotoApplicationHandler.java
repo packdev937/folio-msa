@@ -2,10 +2,8 @@ package kr.folio.photo.application.handler;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoRepository;
 import kr.folio.photo.domain.core.entity.Photo;
@@ -33,10 +31,12 @@ public class PhotoApplicationHandler {
 
     @Transactional
     public CreatedPhotoEvent createPhoto(CreatePhotoRequest createPhotoRequest) {
-        Photo photo = photoDataMapper.toDomain(createPhotoRequest);
+        List<String> userIds = includeUploaderToList(createPhotoRequest);
+
+        Photo photo = photoDataMapper.toDomain(createPhotoRequest, userIds);
         Photo savedPhoto = photoRepository.createPhoto(photo);
-        // todo : CreatedPhotoEvent 발행 -> Feed에서 수신 후 Feed 생성
-        CreatedPhotoEvent createdPhotoEvent = photoDomainUseCase.validatePhoto(photo);
+
+        CreatedPhotoEvent createdPhotoEvent = photoDomainUseCase.createPhotoEvent(photo);
 
         if (savedPhoto == null) {
             log.error("Could not create photo. Request User ID : {}",
@@ -48,6 +48,13 @@ public class PhotoApplicationHandler {
         log.info("Returning CreatedPhotoEvent for photo. Photo ID : {}",
             createPhotoRequest.requestUserId());
         return createdPhotoEvent;
+    }
+
+    private List<String> includeUploaderToList(CreatePhotoRequest createPhotoRequest) {
+        List<String> userIds = createPhotoRequest.taggedUserIds();
+        userIds.add(createPhotoRequest.requestUserId());
+
+        return userIds;
     }
 
     // todo : 피드에서 요청 되는 부분
