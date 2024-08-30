@@ -5,8 +5,8 @@ import kr.folio.user.presentation.dto.request.CreateUserRequest;
 import kr.folio.user.presentation.dto.response.CreateUserResponse;
 import kr.folio.user.presentation.dto.response.FeedsResponse;
 import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
-import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse.UserProfile;
 import kr.folio.user.presentation.dto.response.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.UserProfileResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,10 +28,14 @@ public class UserDataMapper {
         return new UpdateUserResponse(user.getId(), message);
     }
 
-    public RetrieveUserHomeResponse toRetrieveUserHomeResponse(User user, FeedsResponse feeds) {
+    public RetrieveUserHomeResponse toRetrieveUserHomeResponse(UserProfileResponse userProfileResponse, FeedsResponse feeds) {
         return RetrieveUserHomeResponse.builder()
-            .userProfile(new UserProfile(user))
+            .userProfile(userProfileResponse)
             .feeds(feeds)
             .build();
+    }
+
+    public UserProfileResponse toUserProfileResponse(User user) {
+        return UserProfileResponse.of(user);
     }
 }

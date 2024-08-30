@@ -15,6 +15,7 @@ import kr.folio.user.presentation.dto.response.CreateUserResponse;
 import kr.folio.user.presentation.dto.response.DeleteUserResponse;
 import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
 import kr.folio.user.presentation.dto.response.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.UserProfileResponse;
 import kr.folio.user.presentation.dto.response.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,5 +83,10 @@ public class UserApplicationService implements UserApplicationUseCase {
     @Override
     public RetrieveUserHomeResponse retrieveUserHome(String requestUserId) {
         return userApplicationHandler.retrieveUserHome(requestUserId);
+    }
+
+    @Override
+    public UserProfileResponse retrieveUserMyPage(String requestUserId) {
+        return userApplicationHandler.retrieveUserProfile(requestUserId);
     }
 }

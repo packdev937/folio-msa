@@ -12,6 +12,7 @@ import kr.folio.user.presentation.dto.response.CreateUserResponse;
 import kr.folio.user.presentation.dto.response.DeleteUserResponse;
 import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
 import kr.folio.user.presentation.dto.response.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.UserProfileResponse;
 import kr.folio.user.presentation.dto.response.ValidateUserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -76,4 +77,8 @@ public interface UserControllerDocs {
     ResponseEntity<RetrieveUserHomeResponse> retrieveUserHome(
         @CurrentUserId String requestUserId);
 
+    @Operation(summary = "유저 마이페이지 조회", description = "유저 마이페이지를 조회합니다.")
+    @GetMapping("/mypage")
+    ResponseEntity<UserProfileResponse> retrieveUserMyPage(
+        @CurrentUserId String requestUserId);
 }

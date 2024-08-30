@@ -10,6 +10,7 @@ import kr.folio.user.presentation.dto.response.CreateUserResponse;
 import kr.folio.user.presentation.dto.response.DeleteUserResponse;
 import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
 import kr.folio.user.presentation.dto.response.UpdateUserResponse;
+import kr.folio.user.presentation.dto.response.UserProfileResponse;
 import kr.folio.user.presentation.dto.response.ValidateUserResponse;
 
 public interface UserApplicationUseCase {
@@ -35,4 +36,6 @@ public interface UserApplicationUseCase {
     DeleteUserResponse deleteUser(String requestUserId);
 
     RetrieveUserHomeResponse retrieveUserHome(String requestUserId);
+
+    UserProfileResponse retrieveUserMyPage(String requestUserId);
 }
