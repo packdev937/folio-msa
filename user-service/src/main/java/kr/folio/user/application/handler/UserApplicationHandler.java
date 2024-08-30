@@ -1,15 +1,20 @@
 package kr.folio.user.application.handler;
 
+import java.util.List;
 import java.util.function.Consumer;
 import kr.folio.user.application.mapper.UserDataMapper;
 import kr.folio.user.application.ports.output.UserRepository;
 import kr.folio.user.domain.core.entity.User;
-import kr.folio.user.domain.core.event.UserCreatedEvent;
+import kr.folio.user.domain.core.event.CreatedUserEvent;
 import kr.folio.user.domain.service.UserDomainUseCase;
+import kr.folio.user.infrastructure.client.FeedServiceClient;
+import kr.folio.user.infrastructure.client.PhotoServiceClient;
 import kr.folio.user.infrastructure.exception.UserAlreadyExistsException;
 import kr.folio.user.infrastructure.exception.UserNotFoundException;
 import kr.folio.user.presentation.dto.request.*;
 import kr.folio.user.presentation.dto.response.DeleteUserResponse;
+import kr.folio.user.presentation.dto.response.FeedsResponse;
+import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
 import kr.folio.user.presentation.dto.response.UpdateUserResponse;
 import kr.folio.user.presentation.dto.response.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +30,13 @@ public class UserApplicationHandler {
     private final UserDomainUseCase userDomainUseCase;
     private final UserRepository userRepository;
     private final UserDataMapper userDataMapper;
+    private final PhotoServiceClient photoServiceClient;
+    private final FeedServiceClient feedServiceClient;
 
     @Transactional
-    public UserCreatedEvent createUser(CreateUserRequest createUserRequest) {
+    public CreatedUserEvent createUser(CreateUserRequest createUserRequest) {
         User user = userDataMapper.toDomain(createUserRequest);
-        UserCreatedEvent userCreatedEvent = userDomainUseCase.validateUser(
+        CreatedUserEvent userCreatedEvent = userDomainUseCase.validateUser(
             user);
         User savedUser = userRepository.createUser(user);
 
@@ -38,7 +45,7 @@ public class UserApplicationHandler {
             throw new UserNotFoundException();
         }
 
-        log.info("Returning UserCreatedEvent for user id: {}", createUserRequest.id());
+        log.info("Returning CreatedUserEvent for user id: {}", createUserRequest.id());
         return userCreatedEvent;
     }
 
@@ -96,5 +103,13 @@ public class UserApplicationHandler {
         }
 
         return userDataMapper.toUpdateResponse(updatedUser, "User updated successfully!");
+    }
+
+    public RetrieveUserHomeResponse retrieveUserHome(String requestUserId) {
+        User user = findUserByIdOrThrow(requestUserId);
+        FeedsResponse feeds = feedServiceClient.retrieveFeeds(requestUserId);
+
+        log.info("Returning RetrieveUserHomeResponse for user id: {}", requestUserId);
+        return userDataMapper.toRetrieveUserHomeResponse(user, feeds);
     }
 }

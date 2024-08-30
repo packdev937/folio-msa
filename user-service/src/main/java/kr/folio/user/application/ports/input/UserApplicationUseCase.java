@@ -8,6 +8,7 @@ import kr.folio.user.presentation.dto.request.UpdateNicknameRequest;
 import kr.folio.user.presentation.dto.request.UpdateProfileImageUrlRequest;
 import kr.folio.user.presentation.dto.response.CreateUserResponse;
 import kr.folio.user.presentation.dto.response.DeleteUserResponse;
+import kr.folio.user.presentation.dto.response.RetrieveUserHomeResponse;
 import kr.folio.user.presentation.dto.response.UpdateUserResponse;
 import kr.folio.user.presentation.dto.response.ValidateUserResponse;
 
@@ -19,13 +20,19 @@ public interface UserApplicationUseCase {
 
     ValidateUserResponse validateUserNickname(String nickname);
 
-    UpdateUserResponse updateUserNickname(String id, UpdateNicknameRequest request);
+    UpdateUserResponse updateUserNickname(String requestUserId,
+        @Valid UpdateNicknameRequest updateNicknameRequest);
 
-    UpdateUserResponse updateUserBirthday(String id, UpdateBirthdayRequest request);
+    UpdateUserResponse updateUserBirthday(String requestUserId,
+        @Valid UpdateBirthdayRequest updateBirthdayRequest);
 
-    UpdateUserResponse updateUserMessage(String id, UpdateMessageRequest request);
+    UpdateUserResponse updateUserMessage(String requestUserId,
+        @Valid UpdateMessageRequest updateMessageRequest);
 
-    UpdateUserResponse updateUserProfileImage(String id, UpdateProfileImageUrlRequest request);
+    UpdateUserResponse updateUserProfileImage(String requestUserId,
+        @Valid UpdateProfileImageUrlRequest updateProfileImageUrlRequest);
 
-    DeleteUserResponse deleteUser(String id);
+    DeleteUserResponse deleteUser(String requestUserId);
+
+    RetrieveUserHomeResponse retrieveUserHome(String requestUserId);
 }
