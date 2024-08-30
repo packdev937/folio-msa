@@ -1,4 +1,4 @@
-package kr.folio.user.infrastructure.exception;
+package kr.folio.feed.infrastructure.exception;
 
 import lombok.Getter;
 
