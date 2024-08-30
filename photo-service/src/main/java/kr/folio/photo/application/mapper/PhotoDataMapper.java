@@ -14,7 +14,7 @@ public class PhotoDataMapper {
     public Photo toDomain(CreatePhotoRequest createUserRequest) {
         return Photo.builder()
             .brandType(createUserRequest.brandType())
-            .photoImageUrl(createUserRequest.photoUrl())
+            .photoImageUrl(createUserRequest.photoImageUrl())
             .userIds(createUserRequest.userIds())
             .build();
     }

@@ -51,9 +51,11 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
     public CreatePhotoResponse createPhoto(CreatePhotoRequest createPhotoRequest) {
         CreatedPhotoEvent createdPhotoEvent = photoApplicationHandler
             .createPhoto(createPhotoRequest);
+
         createdPhotoMessagePublisher.publish(createdPhotoEvent);
+
         return photoDataMapper
-            .toCreateResponse(createdPhotoEvent.photo(), "User saved successfully!");
+            .toCreateResponse(createdPhotoEvent.photo(), "포토가 정상적으로 생성되었습니다.");
     }
 
     @Override

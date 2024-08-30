@@ -34,16 +34,20 @@ public class PhotoApplicationHandler {
     @Transactional
     public CreatedPhotoEvent createPhoto(CreatePhotoRequest createPhotoRequest) {
         Photo photo = photoDataMapper.toDomain(createPhotoRequest);
-        CreatedPhotoEvent photoCreatedEvent = photoDomainUseCase.validatePhoto(photo);
         Photo savedPhoto = photoRepository.createPhoto(photo);
+        // todo : CreatedPhotoEvent 발행 -> Feed에서 수신 후 Feed 생성
+        CreatedPhotoEvent createdPhotoEvent = photoDomainUseCase.validatePhoto(photo);
 
         if (savedPhoto == null) {
-            log.error("Could not save photo with id: {}", createPhotoRequest.id());
+            log.error("Could not create photo. Request User ID : {}",
+	createPhotoRequest.requestUserId());
             throw new IllegalArgumentException();
+            // todo : Exception 변경
         }
 
-        log.info("Returning CreatedPhotoEvent for photo id: {}", createPhotoRequest.id());
-        return photoCreatedEvent;
+        log.info("Returning CreatedPhotoEvent for photo. Photo ID : {}",
+            createPhotoRequest.requestUserId());
+        return createdPhotoEvent;
     }
 
     // todo : 피드에서 요청 되는 부분

@@ -31,23 +31,21 @@ public interface PhotoControllerDocs {
         @RequestBody CreatePhotoRequest createPhotoRequest
     );
 
-    @Operation(summary = "포토 상세 조회", description = "포토를 상제 조회합니다.")
+    @Operation(summary = "포토 상세 조회", description = "포토를 상제 조회합니다. Feed-Service에 의해 호출됩니다.")
     @GetMapping("/{photoId}")
     ResponseEntity<RetrievePhotoResponse> retrievePhoto(
         @CurrentUserId String requestUserId,
         @PathVariable(name = "photoId") Long photoId
     );
 
-    @Operation(summary = "포토 이미지 수정", description = "포토 이미지를 수정합니다.")
+    @Operation(summary = "포토 이미지 수정", description = "포토 이미지를 수정합니다. Feed-Service에 의해 호출됩니다.")
     @PatchMapping
     ResponseEntity<UpdatePhotoResponse> updatePhotoImage(
-        @CurrentUserId String requestUserId, // 누가 수정 했는지 알아야 하니깐
-        @RequestBody UpdatePhotoImageRequest request
+        @CurrentUserId String requestUserId,
+        @RequestBody UpdatePhotoImageRequest updatePhotoImageRequest
     );
 
-    // todo : 피드가 한 개도 존재하지 않는다면 삭제 (Feed-Service에서 호출해줘야 함)
-    // AWS 이미지도 같이 삭제할 수 있나?
-    @Operation(summary = "포토 피드 삭제", description = "포토 피드를 삭제합니다.")
+    @Operation(summary = "포토 피드 삭제", description = "포토를 삭제합니다. 피드가 하나라도 없다면 삭제됩니다.")
     @DeleteMapping("/{photoId}")
     ResponseEntity<DeletePhotoResponse> deletePhoto(
         @PathVariable(name = "photoId") Long photoId

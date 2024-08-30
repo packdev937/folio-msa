@@ -15,7 +15,7 @@ public interface PhotoApplicationUseCase {
 
     RetrievePhotoResponse retrievePhoto(String requestUserId, Long photoId);
 
-    UpdatePhotoResponse updatePhotoImage(String requestUserId, UpdatePhotoImageRequest updatePhotoRequest);
+    UpdatePhotoResponse updatePhotoImage(String requestUserId, @Valid UpdatePhotoImageRequest updatePhotoRequest);
 
     DeletePhotoResponse deletePhoto(Long photoId);
 

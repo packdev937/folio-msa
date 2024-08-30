@@ -1,5 +1,7 @@
 package kr.folio.photo.presentation.rest;
 
+import java.util.HashMap;
+import java.util.Map;
 import kr.folio.photo.application.ports.input.PhotoApplicationUseCase;
 import kr.folio.photo.presentation.dto.request.CreatePhotoRequest;
 import kr.folio.photo.presentation.dto.request.UpdatePhotoImageRequest;
@@ -23,15 +25,21 @@ public class PhotoController implements PhotoControllerDocs {
     private final PhotoApplicationUseCase photoApplicationUseCase;
 
     @GetMapping("/health_check")
-    public String welcome() {
-        return "Welcome to photo service";
+    public Map<String, Object> healthCheck() {
+        Map<String, Object> healthDetails = new HashMap<>();
+        healthDetails.put("status", "Photo-Service가 실행 중 입니다.");
+        healthDetails.put("serverTime", System.currentTimeMillis());
+        healthDetails.put("freeMemory", Runtime.getRuntime().freeMemory());
+
+        return healthDetails;
     }
 
     @Override
     public ResponseEntity<CreatePhotoResponse> createPhoto(
-        CreatePhotoRequest request) {
+        CreatePhotoRequest createPhotoRequest) {
+
         return new ResponseEntity<>(
-            photoApplicationUseCase.createPhoto(request)
+            photoApplicationUseCase.createPhoto(createPhotoRequest)
             , HttpStatus.CREATED
         );
     }
