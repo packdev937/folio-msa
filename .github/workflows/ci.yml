@@ -1,16 +1,12 @@
 name: Backend Server CI
 
 on:
-  push:
-    branches:
-      - main
-
-  pull_request:
-    branches:
-      - main
-      - develop
-
-    types: [ opened, synchronize ]
+#  pull_request:
+#    branches:
+#      - main
+#      - develop
+#
+#    types: [ opened, synchronize ]
 
 jobs:
   build:
