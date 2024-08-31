@@ -46,3 +46,16 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+String jarName = "gateway-service.jar"
+
+tasks.named("bootJar") {
+    bootJar.getArchiveFileName().set(jarName)
+
+    bootJar.doLast(task -> {
+        copy(copySpec -> {
+            copySpec.from("build/libs/" + jarName)
+            copySpec.into("../build/libs")
+        })
+    })
+}
