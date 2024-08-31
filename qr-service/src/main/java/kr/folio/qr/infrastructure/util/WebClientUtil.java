@@ -1,5 +1,6 @@
 package kr.folio.qr.infrastructure.util;
 
+import kr.folio.qr.infrastructure.exception.RedirectUriNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -17,8 +18,7 @@ public class WebClientUtil {
             .flatMap(response -> {
 	URI redirectUri = response.getHeaders().getLocation();
 	if (redirectUri == null) {
-	    return Mono.error(new IllegalArgumentException());
-	    // todo : RedirectUriNotFoundException
+	    return Mono.error(new RedirectUriNotFoundException());
 	} else {
 	    return Mono.just(redirectUri.toString());
 	}
