@@ -7,6 +7,7 @@ import kr.folio.photo.application.ports.output.PhotoRepository;
 import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.domain.service.PhotoDomainService;
 import kr.folio.photo.domain.core.vo.AgeGroup;
+import kr.folio.photo.domain.service.PhotoDomainUseCase;
 import kr.folio.photo.presentation.dto.response.TrendResponse.TrendItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.List;
 @Component
 public class PhotoTrendHandler {
 
-    private final PhotoDomainService photoDomainService;
+    private final PhotoDomainUseCase photoDomainUseCase;
     private final PhotoRepository photoRepository;
 
     public List<Photo> findLatestPhotos(final int count) {
@@ -29,18 +30,18 @@ public class PhotoTrendHandler {
 
     public List<TrendItem> getRecommendedPhotos(List<Photo> latestPhotos, AgeGroup ageGroup,
         Map<String, Integer> userAges) {
-        List<Photo> recommendedPhotos = photoDomainService.retrieveCachedRecommendedPhotos(
+        List<Photo> recommendedPhotos = photoDomainUseCase.retrieveCachedRecommendedPhotos(
             ageGroup);
 
         if (recommendedPhotos.isEmpty()) {
-            recommendedPhotos = photoDomainService.filterAndSortPhotosByAgeGroup(
+            recommendedPhotos = photoDomainUseCase.filterAndSortPhotosByAgeGroup(
 	latestPhotos, userAges, ageGroup);
-            photoDomainService.cacheRecommendedPhotos(recommendedPhotos, ageGroup);
+            photoDomainUseCase.cacheRecommendedPhotos(recommendedPhotos, ageGroup);
         }
 
         return recommendedPhotos.stream()
             .map(photo ->
-	new TrendItem(photo.getId(),
+	new TrendItem(photo.getPhotoId(),
 	    photo.getPhotoImageUrl(),
 	    photo.getBrandType(),
 	    LocalDateTime.now()

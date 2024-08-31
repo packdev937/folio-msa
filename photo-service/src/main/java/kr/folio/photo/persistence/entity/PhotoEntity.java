@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import kr.folio.photo.domain.core.vo.BrandType;
 import lombok.AccessLevel;
@@ -42,7 +43,7 @@ public class PhotoEntity extends BaseEntity {
     private BrandType brandType;
 
     @ElementCollection
-    private ArrayList<String> userIds = new ArrayList<>();
+    private List<String> userIds = new ArrayList<>();
 
     @Override
     public int hashCode() {
