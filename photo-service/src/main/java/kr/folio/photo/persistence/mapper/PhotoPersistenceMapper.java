@@ -22,7 +22,7 @@ public class PhotoPersistenceMapper {
         }
 
         return Photo.builder()
-            .id(photoEntity.getId())
+            .photoId(photoEntity.getId())
             .brandType(photoEntity.getBrandType())
             .photoImageUrl(photoEntity.getPhotoUrl())
             .userIds(photoEntity.getUserIds())
