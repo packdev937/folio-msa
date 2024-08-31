@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.URL;
  *
  * @param requestUserId
  * @param brandType
- * @param photoImageUrl
+ * @param photoImageUrl Qr 스캔 후 AWS S3 버킷에 업로드 된 이미지
  * @param taggedUserIds
  */
 @Schema(description = "포토 생성 요청")

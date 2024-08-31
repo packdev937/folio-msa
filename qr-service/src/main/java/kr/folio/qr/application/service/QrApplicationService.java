@@ -5,9 +5,11 @@ import kr.folio.qr.application.handler.QrApplicationHandler;
 import kr.folio.qr.application.ports.input.QrApplicationUseCase;
 import kr.folio.qr.infrastructure.annotation.ApplicationService;
 import kr.folio.qr.presentation.dto.request.ScanQrRequest;
+import kr.folio.qr.presentation.dto.response.FileResponse;
 import kr.folio.qr.presentation.dto.response.ScanQrResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,12 +21,12 @@ public class QrApplicationService implements QrApplicationUseCase {
 
     @Override
     public ScanQrResponse extractFileFromQrUrl(ScanQrRequest scanQrRequest) {
-        String extractedImageUrl = qrApplicationHandler
-            .extractFileFromQrUrl(scanQrRequest)
-            .flatMap(fileResponse ->
-	objectStorageHandler.uploadFile(fileResponse.fileByte())
-            ).block();
+        Mono<FileResponse> fileResponse = qrApplicationHandler.extractFileFromQrUrl(
+            scanQrRequest);
 
-        return new ScanQrResponse(extractedImageUrl);
+        Mono<String> storedImageUrl = objectStorageHandler.uploadFile(
+            fileResponse.block().fileByte());
+
+        return new ScanQrResponse(storedImageUrl.block(), fileResponse.block().type());
     }
 }
