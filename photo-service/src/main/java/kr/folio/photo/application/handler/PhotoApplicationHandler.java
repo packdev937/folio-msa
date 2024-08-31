@@ -7,6 +7,9 @@ import kr.folio.photo.application.ports.output.PhotoRepository;
 import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
 import kr.folio.photo.domain.service.PhotoDomainUseCase;
+import kr.folio.photo.infrastructure.exception.PhotoNotCreatedException;
+import kr.folio.photo.infrastructure.exception.PhotoNotFoundException;
+import kr.folio.photo.infrastructure.exception.PhotoNotUpdatedException;
 import kr.folio.photo.presentation.dto.request.CreatePhotoRequest;
 import kr.folio.photo.presentation.dto.request.UpdatePhotoImageRequest;
 import kr.folio.photo.presentation.dto.response.DeletePhotoResponse;
@@ -39,8 +42,8 @@ public class PhotoApplicationHandler {
         if (savedPhoto == null) {
             log.error("Could not create photo. Request User ID : {}",
 	createPhotoRequest.requestUserId());
-            throw new IllegalArgumentException();
-            // todo : Exception 변경
+
+            throw new PhotoNotCreatedException();
         }
 
         log.info("Returning CreatedPhotoEvent for photo. Photo ID : {}",
@@ -55,13 +58,11 @@ public class PhotoApplicationHandler {
         return userIds;
     }
 
-    // todo : 피드에서 요청 되는 부분
     public RetrievePhotoResponse retrievePhoto(Long photoId) {
         Photo retrievedPhoto = photoRepository.findPhotoById(photoId).orElse(null);
         if (retrievedPhoto == null) {
             log.error("Could not find photo with id: {}", photoId);
-            throw new IllegalArgumentException();
-            // todo : PhotoNotFoundException
+            throw new PhotoNotFoundException();
         }
 
         log.info("Returning RetrievedPhotoEvent for photo id: {}", photoId);
@@ -75,11 +76,9 @@ public class PhotoApplicationHandler {
         });
     }
 
-    // todo : 수정 권한은 Feed-Service 에서 수행
     private Photo findPhotoById(Long photoId) {
         return photoRepository.findPhotoById(photoId).orElseThrow(
-            IllegalArgumentException::new
-            // todo : PhotoNotFoundException
+            PhotoNotFoundException::new
         );
     }
 
@@ -90,17 +89,16 @@ public class PhotoApplicationHandler {
 
         if (updatedPhoto == null) {
             log.error("Could not update user with id: {}", photoId);
-            throw new IllegalArgumentException();
-            // todo : PhotoNotFoundException
+            throw new PhotoNotUpdatedException();
         }
 
         return photoDataMapper.toUpdateResponse(
-            updatedPhoto, "피드가 정상적으로 수정되었습니다"
+            updatedPhoto, "포토가 정상적으로 수정되었습니다"
         );
     }
 
     public DeletePhotoResponse deletePhoto(Long photoId) {
         photoRepository.deletePhotoById(photoId);
-        return photoDataMapper.toDeleteResponse(photoId, "피드가 정상적으로 삭제되었습니다");
+        return photoDataMapper.toDeleteResponse(photoId, "포토가 정상적으로 삭제되었습니다");
     }
 }
