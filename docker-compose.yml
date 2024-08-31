@@ -1,0 +1,71 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:1.15-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/nginx/log:/var/log/nginx
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - "gateway-service"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  gateway-service:
+    container_name: gateway-service
+    image: teamfolio/server
+    env_file:
+      - /home/ec2-user/.env
+    ports:
+      - "8761:8761"
+    restart: "always"
+
+  user-service:
+    container_name: user-service
+    image: teamfolio/user-service
+    env_file:
+       - /home/ec2-user/.env
+    ports:
+      - "8081:8081"
+    restart: "always"
+
+  photo-service:
+    container_name: photo-service
+    image: teamfolio/photo-service
+    env_file:
+      - /home/ec2-user/.env
+    ports:
+      - "8082:8082"
+    restart: "always"
+
+  qr-service:
+    container_name: qr-service
+    image: teamfolio/qr-service
+    env_file:
+      - /home/ec2-user/.env
+    ports:
+      - "8082:8082"
+    restart: "always"
+
+  feed-service:
+    container_name: feed-service
+    image: teamfolio/feed-service
+    env_file:
+      - /home/ec2-user/.env
+    ports:
+      - "8083:8083"
+    restart: "always"
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+networks:
+  default:
+    driver: bridge
