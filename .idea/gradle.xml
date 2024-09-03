@@ -4,6 +4,20 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/feed-service" />
+            <option value="$PROJECT_DIR$/gateway-service" />
+            <option value="$PROJECT_DIR$/photo-service" />
+            <option value="$PROJECT_DIR$/qr-service" />
+            <option value="$PROJECT_DIR$/user-service" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/feed-service" />
         <option name="gradleHome" value="" />
         <option name="modules">

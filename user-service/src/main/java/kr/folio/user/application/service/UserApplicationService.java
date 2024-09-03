@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class UserApplicationService implements UserApplicationUseCase {
 
     private final UserApplicationHandler userApplicationHandler;
-    private final UserDataMapper userDataMapper;
 
     @Override
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -45,7 +44,8 @@ public class UserApplicationService implements UserApplicationUseCase {
     }
 
     @Override
-    public UpdateUserResponse updateUserNickname(String requestUserId,
+    public UpdateUserResponse updateUserNickname(
+        String requestUserId,
         UpdateNicknameRequest updateNicknameRequest) {
         return userApplicationHandler.updateUserNickname(requestUserId, updateNicknameRequest);
     }
