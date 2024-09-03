@@ -1,9 +1,15 @@
 package kr.folio.user.domain.service;
 
+import java.time.LocalDate;
 import kr.folio.user.domain.core.entity.User;
-import kr.folio.user.domain.core.event.CreatedUserEvent;
 
 public interface UserDomainUseCase {
 
-    CreatedUserEvent validateUser(User user);
+    void updateUserNickname(User user, String nickname);
+
+    void updateUserBirthday(User user, LocalDate birthday);
+
+    void updateUserMessage(User user, String message);
+
+    void updateUserProfileImage(User user, String profileImageUrl);
 }

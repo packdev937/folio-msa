@@ -51,19 +51,22 @@ public class UserApplicationService implements UserApplicationUseCase {
     }
 
     @Override
-    public UpdateUserResponse updateUserBirthday(String requestUserId,
+    public UpdateUserResponse updateUserBirthday(
+        String requestUserId,
         UpdateBirthdayRequest updateBirthdayRequest) {
         return userApplicationHandler.updateUserBirthday(requestUserId, updateBirthdayRequest);
     }
 
     @Override
-    public UpdateUserResponse updateUserMessage(String requestUserId,
+    public UpdateUserResponse updateUserMessage(
+        String requestUserId,
         UpdateMessageRequest updateMessageRequest) {
         return userApplicationHandler.updateUserMessage(requestUserId, updateMessageRequest);
     }
 
     @Override
-    public UpdateUserResponse updateUserProfileImage(String requestUserId,
+    public UpdateUserResponse updateUserProfileImage(
+        String requestUserId,
         UpdateProfileImageUrlRequest updateProfileImageUrlRequest) {
         return userApplicationHandler.updateUserProfileImage(requestUserId,
             updateProfileImageUrlRequest);
