@@ -7,4 +7,7 @@ public record FeedsResponse(
     List<RetrieveFeedResponse> feeds
 ) {
 
+    public static FeedsResponse from(List<RetrieveFeedResponse> feeds) {
+        return new FeedsResponse(feeds);
+    }
 }

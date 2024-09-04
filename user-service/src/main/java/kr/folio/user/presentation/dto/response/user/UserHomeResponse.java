@@ -6,6 +6,7 @@ import lombok.Builder;
 @Builder
 public record UserHomeResponse(
     UserProfileResponse userProfile,
+    // todo : 추후 변경 가능
     FeedsResponse feeds
 ) {
 
