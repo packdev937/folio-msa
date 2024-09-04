@@ -10,7 +10,6 @@ public class FakeUserRepository implements UserRepository {
 
     private final Map<String, User> usersById = new HashMap<>();
     private final Map<String, User> usersByNickname = new HashMap<>();
-    private long lastUserId = 0;
 
     @Override
     public User saveUser(User user) {
