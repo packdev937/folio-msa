@@ -28,7 +28,8 @@ public class UserDataMapper {
         return new UpdateUserResponse(user.getId(), message);
     }
 
-    public UserHomeResponse toRetrieveUserHomeResponse(UserProfileResponse userProfileResponse, FeedsResponse feeds) {
+    public UserHomeResponse toRetrieveUserHomeResponse(UserProfileResponse userProfileResponse,
+        FeedsResponse feeds) {
         return UserHomeResponse.builder()
             .userProfile(userProfileResponse)
             .feeds(feeds)

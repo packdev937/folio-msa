@@ -7,7 +7,6 @@ import kr.folio.user.application.ports.output.UserRepository;
 import kr.folio.user.domain.core.entity.User;
 import kr.folio.user.domain.service.UserDomainUseCase;
 import kr.folio.user.infrastructure.client.FeedServiceClient;
-import kr.folio.user.infrastructure.client.PhotoServiceClient;
 import kr.folio.user.infrastructure.exception.UserAlreadyExistsException;
 import kr.folio.user.infrastructure.exception.UserNotFoundException;
 import kr.folio.user.presentation.dto.request.CreateUserRequest;
@@ -41,7 +40,7 @@ public class UserApplicationHandler {
     @Transactional
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
         User user = userDataMapper.toDomain(createUserRequest);
-        User savedUser = userRepository.createUser(user);
+        User savedUser = userRepository.saveUser(user);
 
         if (savedUser == null) {
             log.error("Could not save user with id: {} in UserApplicationHandler.java",
@@ -50,7 +49,7 @@ public class UserApplicationHandler {
         }
 
         log.info("Returning CreatedUserEvent for user id: {}", createUserRequest.id());
-        return new CreateUserResponse(savedUser.getId(), "가입이 완료 되었습니다.");
+        return userDataMapper.toCreateResponse(user, "가입이 완료 되었습니다.");
     }
 
     public UserHomeResponse retrieveUserHome(String requestUserId) {
@@ -128,7 +127,7 @@ public class UserApplicationHandler {
     private UpdateUserResponse updateUserField(String id, Consumer<User> updateFunction) {
         User user = findUserByIdOrThrow(id);
         updateFunction.accept(user);
-        User updatedUser = userRepository.updateUser(user);
+        User updatedUser = userRepository.saveUser(user);
 
         if (updatedUser == null) {
             log.error("Could not update user with id: {} in UserApplicationHandler.java", id);
