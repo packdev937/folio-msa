@@ -66,6 +66,10 @@ public class UserApplicationHandler {
         return userDataMapper.toRetrieveUserHomeResponse(userProfileResponse, feeds);
     }
 
+    private User findUserByIdOrThrow(String id) {
+        return userRepository.findUserById(id).orElseThrow(UserNotFoundException::new);
+    }
+
     public UserProfileResponse retrieveUserProfile(String requestUserId) {
         User user = findUserByIdOrThrow(requestUserId);
 
@@ -135,10 +139,6 @@ public class UserApplicationHandler {
         }
 
         return userDataMapper.toUpdateResponse(updatedUser, "회원 정보가 수정되었습니다.");
-    }
-
-    private User findUserByIdOrThrow(String id) {
-        return userRepository.findUserById(id).orElseThrow(UserNotFoundException::new);
     }
 
 }
