@@ -36,12 +36,6 @@ public class FeedController implements FeedControllerDocs {
         return healthDetails;
     }
 
-    /**
-     * Photo-Service로 부터 호출 됩니다. 태그 된 유저 (생성자 포함) 모두 자동으로 피드가 생성됩니다.
-     *
-     * @param createFeedRequest
-     * @return CreateFeedResponse
-     */
     @Override
     public ResponseEntity<CreateFeedResponse> createFeed(CreateFeedRequest createFeedRequest) {
         log.info("Creating feed with id : {} photoId : {}",
@@ -69,10 +63,22 @@ public class FeedController implements FeedControllerDocs {
     }
 
     @Override
+    public ResponseEntity<FeedsResponse> retrieveFeeds(
+        String requestUserId,
+        String targetUserId) {
+        log.info("Retrieving user feeds with targetId : {} by user : {}", targetUserId,
+            requestUserId);
+
+        return new ResponseEntity<>(
+            feedApplicationUseCase.retrieveFeeds(requestUserId, targetUserId)
+            , HttpStatus.OK
+        );
+    }
+
+    @Override
     public ResponseEntity<UpdateFeedResponse> updateFeedAccessRange(String requestUserId,
         UpdateFeedAccessRangeRequest request) {
-        log.info("Updating feed access range with id : {} by user : {}", request.feedId(),
-            requestUserId);
+        log.info("Updating feed access range with id : {} by user : {}", request.feedId(), requestUserId);
 
         return new ResponseEntity<>(
             feedApplicationUseCase.updateFeedAccessRange(requestUserId, request)
@@ -86,35 +92,6 @@ public class FeedController implements FeedControllerDocs {
 
         return new ResponseEntity<>(
             feedApplicationUseCase.deleteFeed(feedId)
-            , HttpStatus.OK
-        );
-    }
-
-    @Override
-    public ResponseEntity<FeedsResponse> retrieveFeeds(String requestUserId) {
-        log.info("Retrieving feeds by user : {}", requestUserId);
-
-        return new ResponseEntity<>(
-            feedApplicationUseCase.retrieveFeeds(requestUserId)
-            , HttpStatus.OK
-        );
-    }
-
-    /**
-     * 사용자의 피드를 조회합니다. 사용자와의 관계에 따라 반환되는 피드가 다를 수 있습니다.
-     *
-     * @param requestUserId
-     * @param userId
-     * @return
-     */
-    @Override
-    public ResponseEntity<FeedsResponse> retrieveUserFeeds(
-        String requestUserId,
-        String userId) {
-        log.info("Retrieving user feeds with id : {} by user : {}", userId, requestUserId);
-
-        return new ResponseEntity<>(
-            feedApplicationUseCase.retrieveUserFeeds(requestUserId, userId)
             , HttpStatus.OK
         );
     }

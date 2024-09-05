@@ -36,14 +36,9 @@ public class FeedApplicationService implements FeedApplicationUseCase {
     }
 
     @Override
-    public FeedsResponse retrieveFeeds(String requestUserId) {
-        return photoApplicationHandler.retrieveFeeds(requestUserId);
-    }
-
-    @Override
-    public FeedsResponse retrieveUserFeeds(
+    public FeedsResponse retrieveFeeds(
         String requestUserId, String userId) {
-        return photoApplicationHandler.retrieveUserFeeds(requestUserId, userId);
+        return photoApplicationHandler.retrieveFeeds(requestUserId, userId);
     }
 
     @Override

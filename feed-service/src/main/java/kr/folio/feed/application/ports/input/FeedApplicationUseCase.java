@@ -16,10 +16,8 @@ public interface FeedApplicationUseCase {
 
     DeleteFeedResponse deleteFeed(Long photoId);
 
-    FeedsResponse retrieveFeeds(String requestUserId);
-
-    FeedsResponse retrieveUserFeeds(
-        String requestUserId, String userId);
+    FeedsResponse retrieveFeeds(
+        String requestUserId, String targetUserId);
 
     UpdateFeedResponse updateFeedAccessRange(String requestUserId,
         UpdateFeedAccessRangeRequest request);

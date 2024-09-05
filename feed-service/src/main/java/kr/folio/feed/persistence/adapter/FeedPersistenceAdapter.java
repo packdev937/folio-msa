@@ -35,7 +35,6 @@ public class FeedPersistenceAdapter implements FeedRepository {
         );
     }
 
-
     @Override
     public void deleteFeedById(Long photoId) {
         feedJpaRepository.deleteById(photoId);
