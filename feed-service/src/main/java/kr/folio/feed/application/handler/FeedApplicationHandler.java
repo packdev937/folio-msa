@@ -1,18 +1,19 @@
 package kr.folio.feed.application.handler;
 
 import feign.FeignException;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import kr.folio.feed.application.mapper.FeedDataMapper;
 import kr.folio.feed.application.ports.output.FeedRepository;
 import kr.folio.feed.domain.core.entity.Feed;
+import kr.folio.feed.domain.core.vo.AccessRange;
+import kr.folio.feed.domain.core.vo.FollowStatus;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
-import kr.folio.feed.infrastructure.client.PhotoServiceClient;
+import kr.folio.feed.infrastructure.client.FollowServiceClient;
 import kr.folio.feed.infrastructure.exception.FeedNotFoundException;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
+import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
 import kr.folio.feed.presentation.dto.response.CreateFeedResponse;
 import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import kr.folio.feed.presentation.dto.response.FeedsResponse;
@@ -30,10 +31,11 @@ public class FeedApplicationHandler {
     private final FeedDomainUseCase feedDomainUseCase;
     private final FeedRepository feedRepository;
     private final FeedDataMapper feedDataMapper;
-    private final PhotoServiceClient photoServiceClient;
+    private final FollowServiceClient followServiceClient;
     private final String UTC = "UTC";
 
     public CreateFeedResponse createFeed(CreateFeedRequest createPhotoRequest) {
+
         Feed feed = feedDataMapper.toDomain(createPhotoRequest);
         Feed savedFeed = feedRepository.save(feed);
 
@@ -41,70 +43,115 @@ public class FeedApplicationHandler {
             log.error("Could not save feed with id: {}", createPhotoRequest.userId());
             throw new IllegalArgumentException();
         }
+
         return feedDataMapper.toCreateResponse(savedFeed);
     }
 
-    // todo : Retrieve 로직 다시 구현
-    public RetrieveFeedDetailResponse retrieveFeedDetail(String requestUserId, Long feedId) {
-        Optional<Feed> feed = feedRepository.findByFeedIdAndRequestUserId(feedId, requestUserId);
+    public RetrieveFeedDetailResponse retrieveFeedDetail(
+        String requestUserId,
+        Long feedId) {
 
-        if (feed.isEmpty()) {
-            return retrieveUserFeedDetail(feedId);
-        }
+        String targetUserId = feedRepository.findUserIdByFeedId(feedId)
+            .orElseThrow();
+        // todo : 적합한 예외가 뭐가 있을까? userId가 없는 feedId는 없는데
 
-        return feedDataMapper.toRetrieveFeedDetailResponse(feed.get());
-    }
+        FollowStatus followStatus = followServiceClient.retrieveFollowStatus(
+            requestUserId,
+            targetUserId);
 
-    public RetrieveFeedDetailResponse retrieveUserFeedDetail(Long feedId) {
         Feed feed = feedRepository.findFeedById(feedId)
             .orElseThrow(FeedNotFoundException::new);
 
-        return feedDataMapper.toRetrieveNonAuthorizedFeedDetailResponse(feed);
+        if (followStatus.isAuthorized()) {
+            return feedDataMapper.toRetrieveNonAuthorizedFeedDetailResponse(feed);
+        }
+
+        return feedDataMapper.toRetrieveFeedDetailResponse(feed);
+    }
+
+    public FeedsResponse retrieveFeeds(
+        String requestUserId,
+        String targetUserId) {
+
+        FollowStatus followStatus = followServiceClient.retrieveFollowStatus(
+            requestUserId,
+            targetUserId);
+
+        List<Feed> feeds = feedRepository.findFeedsByUserId(targetUserId);
+
+        switch (followStatus) {
+            case FOLLOW:
+	feeds = filterFeedsByAccessRange(feeds, AccessRange.FRIEND);
+	break;
+            case UNFOLLOW:
+	feeds = filterFeedsByAccessRange(feeds, AccessRange.PUBLIC);
+	break;
+            default:
+	feeds = filterFeedsByAccessRange(feeds, AccessRange.PUBLIC);
+        }
+
+        return feedDataMapper.toFeedsResponse(feeds);
+    }
+
+    private List<Feed> filterFeedsByAccessRange(
+        List<Feed> feeds,
+        AccessRange accessRange) {
+
+        return feeds.stream()
+            .filter(feed -> feed.getAccessRange().isAccessible(accessRange))
+            .collect(Collectors.toList());
+    }
+
+    public UpdateFeedResponse updateFeedAccessRange(
+        String requestUserId,
+        UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest) {
+
+        Feed feed = feedRepository.findByFeedIdAndRequestUserId(
+            updateFeedAccessRangeRequest.feedId(),
+            requestUserId
+        ).orElseThrow(FeedNotFoundException::new);
+
+        feedDomainUseCase.updateAccessRange(feed, updateFeedAccessRangeRequest.updatedAccessRange());
+        feedRepository.save(feed);
+
+        return new UpdateFeedResponse(
+            updateFeedAccessRangeRequest.feedId(),
+            "피드가 성공적으로 업데이트되었습니다."
+        );
+    }
+
+    public UpdateFeedResponse updateFeedImageUrl(
+        String requestUserId,
+        UpdateFeedImageUrlRequest updateFeedImageUrlRequest) {
+
+        Feed feed = feedRepository.findByFeedIdAndRequestUserId(
+            updateFeedImageUrlRequest.feedId(),
+            requestUserId
+        ).orElseThrow(FeedNotFoundException::new);
+
+        feedDomainUseCase.updateImageUrl(feed, updateFeedImageUrlRequest.updatedImageUri());
+        feedRepository.save(feed);
+
+        return new UpdateFeedResponse(
+            updateFeedImageUrlRequest.feedId(),
+            "피드 이미지가 성공적으로 업데이트되었습니다."
+        );
     }
 
     public DeleteFeedResponse deleteFeed(Long feedId) {
+
         Long photoId = feedRepository.findPhotoIdByFeedId(feedId);
         feedRepository.deleteFeedById(feedId);
 
         int feedCount = feedRepository.countFeedByPhotoId(photoId);
         if (feedDomainUseCase.isPhotoDeletable(feedCount)) {
             try {
-	photoServiceClient.deletePhoto(photoId);
+	// Delete는 카프카 이벤트를 사용하자
             } catch (FeignException feignException) {
 	log.error("Failed to delete photo with id: {}", photoId);
             }
         }
 
         return new DeleteFeedResponse(feedId, "피드가 성공적으로 제거되었습니다.");
-    }
-
-    public FeedsResponse retrieveFeeds(String requestUserId) {
-        log.info("Retrieving feeds for user with id: {}", requestUserId);
-
-        return feedDataMapper.toFeedsResponse(
-            feedRepository.findFeedsByUserId(requestUserId)
-        );
-    }
-
-    public FeedsResponse retrieveUserFeeds(String requestUserId, String userId) {
-        // 전체 공개인 것만 반환
-        // Follow-Service 에게 요청해서 팔로우 여부 확인
-        // todo : requestUserId도 받아서 follow 여부에 따라 isFriend 까지 허용
-        List<Feed> feeds = feedRepository.findFeedsByUserId(userId)
-            .stream().filter(feed -> feed.getAccessRange().isPublic())
-            .collect(Collectors.toList());
-
-        return feedDataMapper.toFeedsResponse(feeds);
-    }
-
-    public UpdateFeedResponse updateFeedAccessRange(String requestUserId,
-        UpdateFeedAccessRangeRequest request) {
-        Feed feed = feedRepository.findByFeedIdAndRequestUserId(request.feedId(), requestUserId)
-            .orElseThrow(FeedNotFoundException::new);
-
-        feed.updateAccessRange(request.updatedAccessRange());
-        feedRepository.save(feed);
-
-        return new UpdateFeedResponse(request.feedId(), "피드가 성공적으로 업데이트되었습니다.");
     }
 }

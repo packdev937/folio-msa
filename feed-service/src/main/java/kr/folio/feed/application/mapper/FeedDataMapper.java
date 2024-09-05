@@ -17,7 +17,7 @@ public class FeedDataMapper {
         return Feed.builder()
             .userId(createPhotoRequest.userId())
             .photoId(createPhotoRequest.photoId())
-            .photoImageUrl(createPhotoRequest.photoImageUrl())
+            .imageUrl(createPhotoRequest.photoImageUrl())
             .taggedUsers(createPhotoRequest.taggedUserIds())
             .accessRange(AccessRange.PUBLIC)
             .build();
@@ -26,7 +26,7 @@ public class FeedDataMapper {
     public RetrieveFeedDetailResponse toRetrieveFeedDetailResponse(Feed feed) {
         return RetrieveFeedDetailResponse.builder()
             .feedId(feed.getId())
-            .photoImageUrl(feed.getPhotoImageUrl())
+            .photoImageUrl(feed.getImageUrl())
             .accessRange(feed.getAccessRange())
             .taggedUsers(feed.getTaggedUsers())
             .createdAt(feed.getCreatedAt())
@@ -36,7 +36,7 @@ public class FeedDataMapper {
     public RetrieveFeedDetailResponse toRetrieveNonAuthorizedFeedDetailResponse(Feed feed) {
         return RetrieveFeedDetailResponse.builder()
             .feedId(feed.getId())
-            .photoImageUrl(feed.getPhotoImageUrl())
+            .photoImageUrl(feed.getImageUrl())
             .taggedUsers(feed.getTaggedUsers())
             .accessRange(null)
             .createdAt(feed.getCreatedAt())
@@ -50,7 +50,7 @@ public class FeedDataMapper {
     }
 
     public FeedResponse toFeedResponse(Feed feed) {
-        return new FeedResponse(feed.getId(), feed.getPhotoImageUrl());
+        return new FeedResponse(feed.getId(), feed.getImageUrl());
     }
 
     public CreateFeedResponse toCreateResponse(Feed savedFeed) {

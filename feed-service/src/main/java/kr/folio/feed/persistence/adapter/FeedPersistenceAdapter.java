@@ -66,4 +66,11 @@ public class FeedPersistenceAdapter implements FeedRepository {
             )
         );
     }
+
+    @Override
+    public Optional<String> findUserIdByFeedId(Long feedId) {
+        return Optional.ofNullable(
+            feedJpaRepository.findUserIdByFeedId(feedId)
+        );
+    }
 }

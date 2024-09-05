@@ -5,6 +5,7 @@ import kr.folio.feed.application.ports.input.FeedApplicationUseCase;
 import kr.folio.feed.infrastructure.annotation.ApplicationService;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
+import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
 import kr.folio.feed.presentation.dto.response.CreateFeedResponse;
 import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import kr.folio.feed.presentation.dto.response.FeedsResponse;
@@ -18,32 +19,49 @@ import lombok.extern.slf4j.Slf4j;
 @ApplicationService
 public class FeedApplicationService implements FeedApplicationUseCase {
 
-    private final FeedApplicationHandler photoApplicationHandler;
+    private final FeedApplicationHandler feedApplicationHandler;
 
     @Override
     public CreateFeedResponse createFeed(CreateFeedRequest createFeedRequest) {
-        return photoApplicationHandler.createFeed(createFeedRequest);
+
+        return feedApplicationHandler.createFeed(createFeedRequest);
     }
 
     @Override
-    public RetrieveFeedDetailResponse retrieveFeedDetail(String requestUserId, Long feedId) {
-        return photoApplicationHandler.retrieveFeedDetail(requestUserId, feedId);
+    public RetrieveFeedDetailResponse retrieveFeedDetail(
+        String requestUserId,
+        Long feedId) {
+
+        return feedApplicationHandler.retrieveFeedDetail(requestUserId, feedId);
     }
 
     @Override
     public DeleteFeedResponse deleteFeed(Long photoId) {
-        return photoApplicationHandler.deleteFeed(photoId);
+
+        return feedApplicationHandler.deleteFeed(photoId);
     }
 
     @Override
     public FeedsResponse retrieveFeeds(
-        String requestUserId, String userId) {
-        return photoApplicationHandler.retrieveFeeds(requestUserId, userId);
+        String requestUserId,
+        String targetUserId) {
+
+        return feedApplicationHandler.retrieveFeeds(requestUserId, targetUserId);
     }
 
     @Override
-    public UpdateFeedResponse updateFeedAccessRange(String requestUserId,
-        UpdateFeedAccessRangeRequest request) {
-        return photoApplicationHandler.updateFeedAccessRange(requestUserId, request);
+    public UpdateFeedResponse updateFeedAccessRange(
+        String requestUserId,
+        UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest) {
+
+        return feedApplicationHandler.updateFeedAccessRange(requestUserId, updateFeedAccessRangeRequest);
+    }
+
+    @Override
+    public UpdateFeedResponse updateFeedImageUrl(
+        String requestUserId,
+        UpdateFeedImageUrlRequest updateFeedImageUriRequest) {
+
+        return feedApplicationHandler.updateFeedImageUrl(requestUserId, updateFeedImageUriRequest);
     }
 }

@@ -3,7 +3,6 @@ package kr.folio.feed.presentation.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 import kr.folio.feed.domain.core.vo.AccessRange;
-import kr.folio.feed.domain.core.vo.TaggedUser;
 import lombok.Builder;
 
 /**

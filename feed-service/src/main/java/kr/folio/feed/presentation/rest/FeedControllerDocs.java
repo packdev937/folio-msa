@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import kr.folio.feed.infrastructure.annotation.CurrentUserId;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
+import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
 import kr.folio.feed.presentation.dto.response.CreateFeedResponse;
 import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import kr.folio.feed.presentation.dto.response.FeedsResponse;
@@ -47,10 +48,17 @@ public interface FeedControllerDocs {
     );
 
     @Operation(summary = "피드 접근 권한 수정", description = "피드의 접근 권한을 수정합니다.")
-    @PatchMapping
+    @PatchMapping("/access-range")
     ResponseEntity<UpdateFeedResponse> updateFeedAccessRange(
         @CurrentUserId String requestUserId,
         @Valid @RequestBody UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest
+    );
+
+    @Operation(summary = "피드 사진 수정", description = "피드의 사진을 수정합니다.")
+    @PatchMapping("/image")
+    ResponseEntity<UpdateFeedResponse> updateFeedImageUrl(
+        @CurrentUserId String requestUserId,
+        @Valid @RequestBody UpdateFeedImageUrlRequest updateFeedImageUriRequest
     );
 
     @Operation(summary = "피드를 삭제 합니다", description = "피드 삭제 권한 확인 후 피드를 삭제합니다. 만약 마지막 피드라면 Photo-Service에 포토 삭제 요청을 진행합니다. ")
