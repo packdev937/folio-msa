@@ -154,4 +154,8 @@ public class FeedApplicationHandler {
 
         return new DeleteFeedResponse(feedId, "피드가 성공적으로 제거되었습니다.");
     }
+
+    public List<Long> retrieveFeedIdsByUserId(String userId) {
+        return feedRepository.findFeedIdsByUserId(userId);
+    }
 }

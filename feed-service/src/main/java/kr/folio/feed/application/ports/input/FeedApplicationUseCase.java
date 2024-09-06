@@ -1,5 +1,6 @@
 package kr.folio.feed.application.ports.input;
 
+import java.util.List;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
@@ -18,7 +19,9 @@ public interface FeedApplicationUseCase {
         Long feedId
     );
 
-    DeleteFeedResponse deleteFeed(Long photoId);
+    DeleteFeedResponse deleteFeed(Long feedId);
+
+    List<Long> retrieveFeedIdsByUserId(String userId);
 
     FeedsResponse retrieveFeeds(
         String requestUserId,

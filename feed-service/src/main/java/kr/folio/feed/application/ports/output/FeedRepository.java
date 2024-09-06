@@ -21,4 +21,6 @@ public interface FeedRepository {
     Optional<Feed> findFeedById(Long feedId);
 
     Optional<String> findUserIdByFeedId(Long feedId);
+
+    List<Long> findFeedIdsByUserId(String userId);
 }

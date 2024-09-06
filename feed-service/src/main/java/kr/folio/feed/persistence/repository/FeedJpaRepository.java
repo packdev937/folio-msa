@@ -17,4 +17,6 @@ public interface FeedJpaRepository extends JpaRepository<FeedEntity, Long> {
     Optional<FeedEntity> findByFeedIdAndRequestUserId(Long feedId, String requestUserId);
 
     String findUserIdByFeedId(Long feedId);
+
+    List<Long> findFeedIdsByUserId(String userId);
 }

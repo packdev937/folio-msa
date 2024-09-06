@@ -1,5 +1,6 @@
 package kr.folio.feed.application.service;
 
+import java.util.List;
 import kr.folio.feed.application.handler.FeedApplicationHandler;
 import kr.folio.feed.application.ports.input.FeedApplicationUseCase;
 import kr.folio.feed.infrastructure.annotation.ApplicationService;
@@ -39,6 +40,11 @@ public class FeedApplicationService implements FeedApplicationUseCase {
     public DeleteFeedResponse deleteFeed(Long photoId) {
 
         return feedApplicationHandler.deleteFeed(photoId);
+    }
+
+    @Override
+    public List<Long> retrieveFeedIdsByUserId(String userId) {
+        return feedApplicationHandler.retrieveFeedIdsByUserId(userId);
     }
 
     @Override
