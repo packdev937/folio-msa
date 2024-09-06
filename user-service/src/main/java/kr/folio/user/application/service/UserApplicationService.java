@@ -74,16 +74,19 @@ public class UserApplicationService implements UserApplicationUseCase {
 
     @Override
     public DeleteUserResponse deleteUser(String requestUserId) {
+        // todo : User 삭제 시 Tagged 된 유저에서도 제외해야 한다
         return userApplicationHandler.deleteUser(requestUserId);
     }
 
     @Override
     public UserHomeResponse retrieveUserHome(String requestUserId) {
+
         return userApplicationHandler.retrieveUserHome(requestUserId);
     }
 
     @Override
     public UserProfileResponse retrieveUserMyPage(String requestUserId) {
+
         return userApplicationHandler.retrieveUserProfile(requestUserId);
     }
 }

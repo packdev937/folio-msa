@@ -52,8 +52,7 @@ public class FeedApplicationHandler {
         Long feedId) {
 
         String targetUserId = feedRepository.findUserIdByFeedId(feedId)
-            .orElseThrow();
-        // todo : 적합한 예외가 뭐가 있을까? userId가 없는 feedId는 없는데
+            .orElseThrow(() -> new IllegalStateException("FeedId에 해당하는 userId가 없습니다."));
 
         FollowStatus followStatus = followServiceClient.retrieveFollowStatus(
             requestUserId,
@@ -87,7 +86,7 @@ public class FeedApplicationHandler {
 	feeds = filterFeedsByAccessRange(feeds, AccessRange.PUBLIC);
 	break;
             default:
-	feeds = filterFeedsByAccessRange(feeds, AccessRange.PUBLIC);
+	feeds = filterFeedsByAccessRange(feeds, AccessRange.PRIVATE);
         }
 
         return feedDataMapper.toFeedsResponse(feeds);
@@ -111,12 +110,13 @@ public class FeedApplicationHandler {
             requestUserId
         ).orElseThrow(FeedNotFoundException::new);
 
-        feedDomainUseCase.updateAccessRange(feed, updateFeedAccessRangeRequest.updatedAccessRange());
+        feedDomainUseCase.updateAccessRange(feed,
+            updateFeedAccessRangeRequest.updatedAccessRange());
         feedRepository.save(feed);
 
         return new UpdateFeedResponse(
             updateFeedAccessRangeRequest.feedId(),
-            "피드가 성공적으로 업데이트되었습니다."
+            "피드가 범위가 성공적으로 업데이트되었습니다."
         );
     }
 

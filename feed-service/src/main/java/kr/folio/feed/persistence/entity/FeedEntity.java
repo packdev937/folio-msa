@@ -1,12 +1,15 @@
 package kr.folio.feed.persistence.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 import kr.folio.feed.domain.core.vo.AccessRange;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,6 +38,11 @@ public class FeedEntity extends BaseEntity {
     @Column(name = "photo_image_url")
     private String photoImageUrl;
 
+    @Builder.Default // 기본 값을 유지하고 싶을 때
     @Enumerated(EnumType.STRING)
     private AccessRange accessRange = AccessRange.PUBLIC;
+
+    @Builder.Default
+    @ElementCollection
+    private List<String> taggedUsers = new ArrayList<>();
 }
