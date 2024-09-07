@@ -11,7 +11,7 @@ public class PhotoPersistenceMapper {
         return PhotoEntity.builder()
             .photoUrl(photo.getPhotoImageUrl())
             .brandType(photo.getBrandType())
-            .userIds(photo.getUserIds())
+            .taggedUserIds(photo.getTaggedUserIds())
             .viewCount(photo.getViewCount())
             .build();
     }
@@ -25,7 +25,7 @@ public class PhotoPersistenceMapper {
             .photoId(photoEntity.getId())
             .brandType(photoEntity.getBrandType())
             .photoImageUrl(photoEntity.getPhotoUrl())
-            .userIds(photoEntity.getUserIds())
+            .taggedUserIds(photoEntity.getTaggedUserIds())
             .viewCount(photoEntity.getViewCount())
             .build();
     }

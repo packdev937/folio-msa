@@ -20,4 +20,6 @@ public interface PhotoApplicationUseCase {
     DeletePhotoResponse deletePhoto(Long photoId);
 
     TrendResponse retrievePhotoTrend(String requestUserId);
+
+    void deleteUserFromTag(String userId);
 }

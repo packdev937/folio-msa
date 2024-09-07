@@ -12,7 +12,10 @@ public interface PhotoDomainUseCase {
 
     List<Photo> retrieveCachedRecommendedPhotos(AgeGroup ageGroup);
 
-    List<Photo> filterAndSortPhotosByAgeGroup(List<Photo> latestPhotos, Map<String, Integer> userAges, AgeGroup ageGroup);
+    List<Photo> filterAndSortPhotosByAgeGroup(List<Photo> latestPhotos,
+        Map<String, Integer> userAges, AgeGroup ageGroup);
 
     List<Photo> cacheRecommendedPhotos(List<Photo> recommendedPhotos, AgeGroup ageGroup);
+
+    Photo updatePhotoImageUrl(Photo photo, String newPhotoImageUrl);
 }

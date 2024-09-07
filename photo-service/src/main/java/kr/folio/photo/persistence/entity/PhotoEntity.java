@@ -43,7 +43,7 @@ public class PhotoEntity extends BaseEntity {
     private BrandType brandType;
 
     @ElementCollection
-    private List<String> userIds = new ArrayList<>();
+    private List<String> taggedUserIds = new ArrayList<>();
 
     @Override
     public int hashCode() {

@@ -16,7 +16,7 @@ public class PhotoDataMapper {
         return Photo.builder()
             .brandType(createUserRequest.brandType())
             .photoImageUrl(createUserRequest.photoImageUrl())
-            .userIds(userIds)
+            .taggedUserIds(userIds)
             .build();
     }
 
@@ -29,7 +29,7 @@ public class PhotoDataMapper {
             photo.getPhotoId(),
             photo.getPhotoImageUrl(),
             photo.getBrandType(),
-            photo.getUserIds(),
+            photo.getTaggedUserIds(),
             photo.getUpdatedAt()
         );
     }

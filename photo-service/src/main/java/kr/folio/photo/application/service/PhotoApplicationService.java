@@ -6,11 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import kr.folio.photo.application.handler.PhotoApplicationHandler;
 import kr.folio.photo.application.handler.PhotoTrendHandler;
-import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.input.PhotoApplicationUseCase;
-import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
 import kr.folio.photo.domain.core.entity.Photo;
-import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
 import kr.folio.photo.domain.core.vo.AgeGroup;
 import kr.folio.photo.infrastructure.annotation.ApplicationService;
 import kr.folio.photo.infrastructure.client.UserServiceClient;
@@ -24,7 +21,6 @@ import kr.folio.photo.presentation.dto.response.TrendResponse.TrendItem;
 import kr.folio.photo.presentation.dto.response.UpdatePhotoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,28 +29,21 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
 
     private final PhotoApplicationHandler photoApplicationHandler;
     private final PhotoTrendHandler photoTrendHandler;
-
-    private final PhotoDataMapper photoDataMapper;
-
     private final UserServiceClient userServiceClient;
-
-    @Qualifier("CreatedPhotoEventKafkaPublisher")
-    private final PhotoMessagePublisher createdPhotoMessagePublisher;
 
     @Override
     public CreatePhotoResponse createPhoto(CreatePhotoRequest createPhotoRequest) {
-        CreatedPhotoEvent createdPhotoEvent = photoApplicationHandler
-            .createPhoto(createPhotoRequest);
 
-        createdPhotoMessagePublisher.publish(createdPhotoEvent);
+        log.info("Creating photo with request: {}", createPhotoRequest);
 
-        return photoDataMapper
-            .toCreateResponse(createdPhotoEvent.createdPhotoEventDTO().photoId(),
-	"포토가 정상적으로 생성되었습니다.");
+        return photoApplicationHandler.createPhoto(createPhotoRequest);
     }
 
     @Override
     public RetrievePhotoResponse retrievePhoto(Long photoId) {
+
+        log.info("Retrieving photo with photoId: {}", photoId);
+
         return photoApplicationHandler.retrievePhoto(photoId);
     }
 
@@ -63,11 +52,13 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
         String requestUserId,
         UpdatePhotoImageRequest updatePhotoRequest
     ) {
+
         return photoApplicationHandler.updatePhotoImage(requestUserId, updatePhotoRequest);
     }
 
     @Override
     public DeletePhotoResponse deletePhoto(Long photoId) {
+
         return photoApplicationHandler.deletePhoto(photoId);
     }
 
@@ -76,7 +67,7 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
         List<Photo> latestPhotos = photoTrendHandler.findLatestPhotos(500);
 
         Set<String> userIds = latestPhotos.stream()
-            .flatMap(photo -> photo.getUserIds().stream())
+            .flatMap(photo -> photo.getTaggedUserIds().stream())
             .collect(Collectors.toSet());
 
         // User-Service에서 각 사용자의 나이 정보를 가져옴
@@ -90,6 +81,12 @@ public class PhotoApplicationService implements PhotoApplicationUseCase {
             ageGroup, userAges);
 
         return new TrendResponse(recommendedPhotos);
+    }
+
+    @Override
+    public void deleteUserFromTag(String userId) {
+
+        photoApplicationHandler.deleteUserFromTag(userId);
     }
 
 }

@@ -19,9 +19,12 @@ public class PhotoPersistenceAdapter implements PhotoRepository {
     private final PhotoJpaRepository photoJpaRepository;
 
     @Override
-    public Photo createPhoto(Photo user) {
+    public Photo save(Photo user) {
         return photoPersistenceMapper.toDomain(
-            photoJpaRepository.save(photoPersistenceMapper.toEntity(user)));
+            photoJpaRepository.save(
+	photoPersistenceMapper.toEntity(user)
+            )
+        );
     }
 
     @Override
@@ -30,12 +33,6 @@ public class PhotoPersistenceAdapter implements PhotoRepository {
             photoJpaRepository.findById(photoId)
 	.orElse(null)
         ));
-    }
-
-    @Override
-    public Photo updatePhoto(Photo photo) {
-        return photoPersistenceMapper.toDomain(
-            photoJpaRepository.save(photoPersistenceMapper.toEntity(photo)));
     }
 
     @Override

@@ -16,7 +16,7 @@ public class Photo {
     private String photoImageUrl;
     private Long viewCount = 0L;
     private BrandType brandType;
-    private List<String> userIds;
+    private List<String> taggedUserIds;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -24,7 +24,11 @@ public class Photo {
         this.viewCount++;
     }
 
-    public void photoImageUrl(String newPhotoImageUrl) {
+    public void updatePhotoImageUrl(String newPhotoImageUrl) {
         this.photoImageUrl = newPhotoImageUrl;
+    }
+
+    public boolean isTaggedBy(String requestUserId) {
+        return taggedUserIds.contains(requestUserId);
     }
 }

@@ -36,7 +36,7 @@ public class PhotoDomainService implements PhotoDomainUseCase {
     }
 
     private double calculateScore(Photo photo, Map<String, Integer> userAges, AgeGroup ageGroup) {
-        double avgTaggedUserAge = photo.getUserIds().stream()
+        double avgTaggedUserAge = photo.getTaggedUserIds().stream()
             .mapToDouble(userId -> userAges.get(userId))
             .average().orElse(0);
 
@@ -63,7 +63,7 @@ public class PhotoDomainService implements PhotoDomainUseCase {
             new CreatedPhotoEventDTO(
 	photo.getPhotoId(),
 	photo.getPhotoImageUrl(),
-	photo.getUserIds());
+	photo.getTaggedUserIds());
 
         return new CreatedPhotoEvent(createdPhotoEventDTO, ZonedDateTime.now(ZoneId.of(UTC)));
     }
