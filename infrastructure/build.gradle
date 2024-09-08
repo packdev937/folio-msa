@@ -23,18 +23,15 @@ repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
-    // Spring
-//    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
+}
 
-    // Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+tasks.named('bootJar') {
+    enabled = false
 }
 
 tasks.named('test') {
