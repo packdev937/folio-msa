@@ -1,16 +1,17 @@
 package kr.folio.feed.application.handler;
 
-import feign.FeignException;
 import java.util.List;
 import java.util.stream.Collectors;
 import kr.folio.feed.application.mapper.FeedDataMapper;
 import kr.folio.feed.application.ports.output.FeedRepository;
 import kr.folio.feed.domain.core.entity.Feed;
+import kr.folio.feed.domain.core.event.DeleteFeedEvent;
 import kr.folio.feed.domain.core.vo.AccessRange;
 import kr.folio.feed.domain.core.vo.FollowStatus;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
 import kr.folio.feed.infrastructure.client.FollowServiceClient;
 import kr.folio.feed.infrastructure.exception.FeedNotFoundException;
+import kr.folio.feed.infrastructure.publisher.DeleteFeedEventKafkaPublisher;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
@@ -21,6 +22,7 @@ import kr.folio.feed.presentation.dto.response.RetrieveFeedDetailResponse;
 import kr.folio.feed.presentation.dto.response.UpdateFeedResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.KafkaException;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -32,7 +34,7 @@ public class FeedApplicationHandler {
     private final FeedRepository feedRepository;
     private final FeedDataMapper feedDataMapper;
     private final FollowServiceClient followServiceClient;
-    private final String UTC = "UTC";
+    private final DeleteFeedEventKafkaPublisher deleteFeedEventKafkaPublisher;
 
     public CreateFeedResponse createFeed(CreateFeedRequest createPhotoRequest) {
 
@@ -139,20 +141,29 @@ public class FeedApplicationHandler {
     }
 
     public DeleteFeedResponse deleteFeed(Long feedId) {
-
         Long photoId = feedRepository.findPhotoIdByFeedId(feedId);
         feedRepository.deleteFeedById(feedId);
 
         int feedCount = feedRepository.countFeedByPhotoId(photoId);
-        if (feedDomainUseCase.isPhotoDeletable(feedCount)) {
-            try {
-	// Delete는 카프카 이벤트를 사용하자
-            } catch (FeignException feignException) {
-	log.error("Failed to delete photo with id: {}", photoId);
-            }
+
+        if (isDeletable(feedCount)) {
+            publishDeleteFeedEvent(photoId);
         }
 
         return new DeleteFeedResponse(feedId, "피드가 성공적으로 제거되었습니다.");
+    }
+
+    private boolean isDeletable(int feedCount) {
+        return feedDomainUseCase.isPhotoDeletable(feedCount);
+    }
+
+    private void publishDeleteFeedEvent(Long photoId) {
+        try {
+            DeleteFeedEvent deleteFeedEvent = feedDomainUseCase.createDeleteFeedEvent(photoId);
+            deleteFeedEventKafkaPublisher.publish(deleteFeedEvent);
+        } catch (KafkaException kafkaException) {
+            log.error("Failed to publish delete feed event for photoId: {}", photoId, kafkaException);
+        }
     }
 
     public List<Long> retrieveFeedIdsByUserId(String userId) {

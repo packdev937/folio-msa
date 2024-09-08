@@ -41,7 +41,7 @@ class FeedApplicationHandlerTest {
         feedRepository = new FakeFeedRepository();
         feedDataMapper = new FeedDataMapper();
         feedApplicationHandler = new FeedApplicationHandler(feedDomainService, feedRepository,
-            feedDataMapper, null);
+            feedDataMapper, null, null);
     }
 
     @Test
