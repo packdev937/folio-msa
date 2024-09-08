@@ -1,8 +1,9 @@
 rootProject.name = 'folio-msa'
 
-include ':common'
 include ':user-service'
 include ':qr-service'
 include ':feed-service'
 include ':photo-service'
 include ':gateway-service'
+include ':infrastructure'
+
