@@ -1,6 +1,7 @@
 package kr.folio.photo.application.handler;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
@@ -104,10 +105,10 @@ public class PhotoApplicationHandler {
         );
     }
 
-    private UpdatePhotoResponse updatePhotoField(Photo photo,
-        Function<Photo, Photo> updateFunction) {
+    private UpdatePhotoResponse updatePhotoField(Photo updatedPhoto,
+        Consumer<Photo> updateFunction) {
 
-        Photo updatedPhoto = updateFunction.apply(photo);
+        updateFunction.accept(updatedPhoto);
         photoRepository.save(updatedPhoto);
 
         return photoDataMapper.toUpdateResponse(

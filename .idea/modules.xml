@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway-service/folio-msa.gateway-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway-service/folio-msa.gateway-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/photo-service/folio-msa.photo-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/photo-service/folio-msa.photo-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/qr-service/folio-msa.qr-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/qr-service/folio-msa.qr-service.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/folio-msa.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/folio-msa.user-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/kr.folio.folio-msa.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/kr.folio.folio-msa.user-service.main.iml" />
     </modules>
   </component>
 </project>

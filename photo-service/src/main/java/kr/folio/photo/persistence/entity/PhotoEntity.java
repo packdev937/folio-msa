@@ -37,11 +37,12 @@ public class PhotoEntity extends BaseEntity {
     private String photoUrl;
 
     @Column(name = "view_count")
-    private Long viewCount = 0L;
+    private Long viewCount;
 
     @Enumerated(EnumType.STRING)
     private BrandType brandType;
 
+    @Builder.Default
     @ElementCollection
     private List<String> taggedUserIds = new ArrayList<>();
 

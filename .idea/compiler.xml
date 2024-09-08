@@ -10,15 +10,18 @@
         </processorPath>
         <module name="folio-msa.photo-service.main" />
         <module name="folio-msa.gateway-service.main" />
+        <module name="kr.folio.folio-msa.user-service.main" />
         <module name="folio-msa.qr-service.main" />
-        <module name="folio-msa.user-service.main" />
         <module name="folio-msa.feed-service.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="17">
       <module name="common" target="17" />
       <module name="common.main" target="17" />
       <module name="common.test" target="17" />
+      <module name="user-service" target="17" />
+      <module name="user-service.main" target="17" />
+      <module name="user-service.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

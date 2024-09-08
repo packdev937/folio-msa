@@ -14,6 +14,7 @@ public class Photo {
 
     private Long photoId;
     private String photoImageUrl;
+    @Builder.Default
     private Long viewCount = 0L;
     private BrandType brandType;
     private List<String> taggedUserIds;

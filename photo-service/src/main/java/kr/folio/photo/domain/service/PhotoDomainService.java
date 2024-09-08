@@ -52,6 +52,11 @@ public class PhotoDomainService implements PhotoDomainUseCase {
         return photos;
     }
 
+    @Override
+    public void updatePhotoImageUrl(Photo photo, String updatePhotoImageUrl) {
+        photo.updatePhotoImageUrl(updatePhotoImageUrl);
+    }
+
     @Cacheable(value = "trend", key = "#ageGroup.name().toLowerCase()")
     public List<Photo> retrieveCachedRecommendedPhotos(AgeGroup ageGroup) {
         return List.of();

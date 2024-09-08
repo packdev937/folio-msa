@@ -17,5 +17,5 @@ public interface PhotoDomainUseCase {
 
     List<Photo> cacheRecommendedPhotos(List<Photo> recommendedPhotos, AgeGroup ageGroup);
 
-    Photo updatePhotoImageUrl(Photo photo, String newPhotoImageUrl);
+    void updatePhotoImageUrl(Photo photo, String updatedPhotoImageUrl);
 }

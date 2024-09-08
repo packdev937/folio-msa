@@ -65,4 +65,15 @@ public class FakeFeedRepository implements FeedRepository {
     public Optional<String> findUserIdByFeedId(Long feedId) {
         return Optional.ofNullable(userFeedMap.get(feedId));
     }
+
+    @Override
+    public List<Long> findFeedIdsByUserId(String userId) {
+        List<Long> feedIds = new ArrayList<>();
+        for (Map.Entry<Long, String> entry : userFeedMap.entrySet()) {
+            if (entry.getValue().equals(userId)) {
+	feedIds.add(entry.getKey());
+            }
+        }
+        return feedIds;
+    }
 }
