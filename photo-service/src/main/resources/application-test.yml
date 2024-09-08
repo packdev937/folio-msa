@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 0
 
 spring:
   config:
@@ -9,7 +9,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-      url: jdbc:h2:~/test;MODE=MySQL
+      url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 
   jpa:
     hibernate:
@@ -20,14 +20,14 @@ spring:
         show_sql: true # SQL 출력
 
 jwt:
-  secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO1Yw3JpBBgI3nVPEahqxeY8qbPSFGyzyEVxnl4AQcrnVneI
-  issuer: duduk.shop
+  secret-key: ${jwt.secret-key}
+  issuer: ${jwt.issuer}
   access:
-    expiration: 3600000 # 1시간 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
-    header: Authorization
+    expiration: ${jwt.access.expiration}
+    header: ${jwt.access.header}
   refresh:
-    expiration: 1209600000 # 2주 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
-    header: Authorization-refresh
+    expiration: ${jwt.refresh.expiration}
+    header: ${jwt.refresh.header}
 
 cloud:
   aws:
