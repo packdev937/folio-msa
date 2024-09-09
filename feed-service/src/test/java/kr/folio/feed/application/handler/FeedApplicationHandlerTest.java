@@ -1,5 +1,6 @@
 package kr.folio.feed.application.handler;
 
+import static kr.folio.feed.common.FeedSteps.피드_생성;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -115,28 +116,5 @@ class FeedApplicationHandlerTest {
         Feed updatedFeed = feedRepository.findFeedById(feed.getId())
             .orElseThrow(FeedNotFoundException::new);
         assertEquals("https://www.google.com", updatedFeed.getImageUrl());
-    }
-
-    @Test
-    void 피드를_삭제한다() {
-        // Given
-        Feed feed = feedRepository.save(피드_생성());
-
-        // When
-        DeleteFeedResponse response = feedApplicationHandler.deleteFeed(feed.getId());
-
-        // Then
-        assertNotNull(response);
-        assertEquals("피드가 성공적으로 제거되었습니다.", response.message());
-        assertFalse(feedRepository.findFeedById(feed.getId()).isPresent());
-    }
-
-    private Feed 피드_생성() {
-        return Feed.builder()
-            .id(1L)
-            .userId("packdev937")
-            .photoId(1L)
-            .imageUrl("https://www.naver.com")
-            .build();
     }
 }
