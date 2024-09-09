@@ -46,4 +46,11 @@ public class PhotoPersistenceAdapter implements PhotoRepository {
             .map(photoPersistenceMapper::toDomain)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Photo> findAll() {
+        return photoJpaRepository.findAll().stream()
+            .map(photoPersistenceMapper::toDomain)
+            .collect(Collectors.toList());
+    }
 }

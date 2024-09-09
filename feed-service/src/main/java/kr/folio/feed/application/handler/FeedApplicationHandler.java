@@ -38,6 +38,8 @@ public class FeedApplicationHandler {
 
     public CreateFeedResponse createFeed(CreateFeedRequest createPhotoRequest) {
 
+        // todo : 피드 생성 시 유저 정보를 초기화 해놓을까? 아니면 동적 조회 (캐싱)
+
         Feed feed = feedDataMapper.toDomain(createPhotoRequest);
         Feed savedFeed = feedRepository.save(feed);
 

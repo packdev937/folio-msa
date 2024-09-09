@@ -32,4 +32,8 @@ public class Photo {
     public boolean isTaggedBy(String requestUserId) {
         return taggedUserIds.contains(requestUserId);
     }
+
+    public void setId(long id) {
+        this.photoId = id;
+    }
 }

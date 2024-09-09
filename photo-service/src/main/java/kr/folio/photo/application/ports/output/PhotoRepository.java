@@ -14,4 +14,5 @@ public interface PhotoRepository {
     void deletePhotoById(Long photoId);
 
     List<Photo> findLatestPhotos();
+    List<Photo> findAll();
 }

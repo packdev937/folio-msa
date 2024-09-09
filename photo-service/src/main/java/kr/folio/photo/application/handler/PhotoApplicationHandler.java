@@ -20,6 +20,7 @@ import kr.folio.photo.presentation.dto.response.UpdatePhotoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.kafka.KafkaException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,17 +36,16 @@ public class PhotoApplicationHandler {
 
     @Qualifier("CreatedPhotoEventKafkaPublisher")
     private final PhotoMessagePublisher createdPhotoMessagePublisher;
-    private final String UTC = "UTC";
 
     @Transactional
     public CreatePhotoResponse createPhoto(CreatePhotoRequest createPhotoRequest) {
+
         List<String> userIds = addUploaderToTaggerUsers(createPhotoRequest);
 
         Photo photo = photoDataMapper.toDomain(createPhotoRequest, userIds);
         Photo savedPhoto = photoRepository.save(photo);
 
-        CreatedPhotoEvent createdPhotoEvent = photoDomainUseCase.createPhotoEvent(photo);
-        createdPhotoMessagePublisher.publish(createdPhotoEvent);
+        publishCreatedPhotoEvent(savedPhoto);
 
         if (savedPhoto == null) {
             log.error("Could not create photo. Request User ID : {}",
@@ -54,12 +54,27 @@ public class PhotoApplicationHandler {
             throw new PhotoNotCreatedException();
         }
 
-        log.info("Returning CreatedPhotoEvent for photo. Photo ID : {}",
+        log.info("Returning CreatePhotoRequest for photo. Request User ID : {}",
             createPhotoRequest.requestUserId());
+
         return photoDataMapper.toCreateResponse(
-            createdPhotoEvent.createdPhotoEventDTO().photoId(),
+            savedPhoto.getPhotoId(),
             "포토가 정상적으로 생성되었습니다."
         );
+    }
+
+    private void publishCreatedPhotoEvent(Photo photo) {
+
+        CreatedPhotoEvent createdPhotoEvent = photoDomainUseCase.createPhotoEvent(photo);
+
+        try {
+            createdPhotoMessagePublisher.publish(createdPhotoEvent);
+        } catch (KafkaException kafkaException) {
+            log.error("Failed to publish CreatedPhotoEvent for photo ID: {}", photo.getPhotoId(),
+	kafkaException);
+        }
+
+        log.info("Returning CreatedPhotoEvent for photo. Photo ID : {}", photo.getPhotoId());
     }
 
     private List<String> addUploaderToTaggerUsers(CreatePhotoRequest createPhotoRequest) {
@@ -85,13 +100,13 @@ public class PhotoApplicationHandler {
     @Transactional
     public UpdatePhotoResponse updatePhotoImage(
         String requestUserId,
-        UpdatePhotoImageRequest updatePhotoRequest) {
+        UpdatePhotoImageRequest updatePhotoImageRequest) {
 
-        Photo photo = findPhotoById(updatePhotoRequest.photoId());
+        Photo photo = findPhotoById(updatePhotoImageRequest.photoId());
 
         if (!photo.isTaggedBy(requestUserId)) {
             log.error("User with id: {} is not tagged in photo with id: {}", requestUserId,
-	updatePhotoRequest.photoId());
+	updatePhotoImageRequest.photoId());
 
             throw new IllegalStateException("사진에 태그된 사용자만 수정할 수 있습니다.");
         }
@@ -100,19 +115,20 @@ public class PhotoApplicationHandler {
             photo,
             updatedPhoto -> photoDomainUseCase.updatePhotoImageUrl(
 	updatedPhoto,
-	updatePhotoRequest.updatedPhotoUrl()
+	updatePhotoImageRequest.updatedPhotoUrl()
             )
         );
     }
 
-    private UpdatePhotoResponse updatePhotoField(Photo updatedPhoto,
+    private UpdatePhotoResponse updatePhotoField(Photo photo,
         Consumer<Photo> updateFunction) {
 
-        updateFunction.accept(updatedPhoto);
-        photoRepository.save(updatedPhoto);
+        updateFunction.accept(photo);
+        Photo updatedPhoto = photoRepository.save(photo);
 
         return photoDataMapper.toUpdateResponse(
-            updatedPhoto,
+            updatedPhoto.getPhotoId(),
+            updatedPhoto.getPhotoImageUrl(),
             "포토가 정상적으로 수정되었습니다"
         );
     }

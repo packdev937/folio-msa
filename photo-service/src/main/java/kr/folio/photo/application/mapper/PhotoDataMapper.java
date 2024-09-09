@@ -34,8 +34,8 @@ public class PhotoDataMapper {
         );
     }
 
-    public UpdatePhotoResponse toUpdateResponse(Photo updatedPhoto, String message) {
-        return new UpdatePhotoResponse(updatedPhoto.getPhotoId(), message);
+    public UpdatePhotoResponse toUpdateResponse(Long photoId, String updatedField, String message) {
+        return new UpdatePhotoResponse(photoId, updatedField, message);
     }
 
     public DeletePhotoResponse toDeleteResponse(Long photoId, String message) {
