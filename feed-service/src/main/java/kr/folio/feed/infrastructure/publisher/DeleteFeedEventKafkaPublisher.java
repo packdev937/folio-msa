@@ -2,8 +2,8 @@ package kr.folio.feed.infrastructure.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.folio.feed.application.ports.output.GenericEventPublisher;
 import kr.folio.feed.domain.core.event.DeleteFeedEvent;
+import kr.folio.infrastructure.kafka.producer.GenericEventPublisher;
 import kr.folio.infrastructure.kafka.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

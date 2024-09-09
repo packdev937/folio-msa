@@ -2,7 +2,7 @@ package kr.folio.photo.infrastructure.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
+import kr.folio.infrastructure.kafka.producer.GenericEventPublisher;
 import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component("CreatedPhotoEventKafkaPublisher")
-public class CreatedPhotoEventKafkaPublisher implements PhotoMessagePublisher<CreatedPhotoEvent> {
+public class CreatedPhotoEventKafkaPublisher implements GenericEventPublisher<CreatedPhotoEvent> {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;

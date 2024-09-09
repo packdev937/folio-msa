@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import kr.folio.infrastructure.kafka.producer.GenericEventPublisher;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
-import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
 import kr.folio.photo.application.ports.output.PhotoRepository;
 import kr.folio.photo.domain.core.vo.BrandType;
 import kr.folio.photo.domain.service.PhotoDomainService;
@@ -26,7 +26,7 @@ class PhotoApplicationHandlerTest {
     private PhotoDomainUseCase photoDomainService;
     private PhotoRepository photoRepository;
     private PhotoDataMapper photoDataMapper;
-    private PhotoMessagePublisher photoMessagePublisher;
+    private GenericEventPublisher photoMessagePublisher;
     private PhotoApplicationHandler photoApplicationHandler;
 
     @BeforeEach

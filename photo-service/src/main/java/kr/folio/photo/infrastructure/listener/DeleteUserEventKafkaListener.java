@@ -1,7 +1,6 @@
 package kr.folio.photo.infrastructure.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.folio.photo.application.ports.input.GenericEventListener;
 import kr.folio.photo.application.ports.input.PhotoApplicationUseCase;
 import kr.folio.photo.domain.core.event.DeleteUserEvent;
 import lombok.RequiredArgsConstructor;

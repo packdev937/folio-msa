@@ -1,10 +1,7 @@
 package kr.folio.user.application.service;
 
 import kr.folio.user.application.handler.UserApplicationHandler;
-import kr.folio.user.application.mapper.UserDataMapper;
 import kr.folio.user.application.ports.input.UserApplicationUseCase;
-import kr.folio.user.application.ports.output.UserMessagePublisher;
-import kr.folio.user.domain.core.event.CreatedUserEvent;
 import kr.folio.user.infrastructure.annotation.ApplicationService;
 import kr.folio.user.presentation.dto.request.CreateUserRequest;
 import kr.folio.user.presentation.dto.request.UpdateBirthdayRequest;
@@ -19,7 +16,6 @@ import kr.folio.user.presentation.dto.response.user.UserProfileResponse;
 import kr.folio.user.presentation.dto.response.user.ValidateUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
 @RequiredArgsConstructor

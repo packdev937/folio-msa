@@ -1,4 +1,4 @@
-package kr.folio.feed.application.ports.output;
+package kr.folio.infrastructure.kafka.producer;
 
 public interface GenericEventPublisher<T> {
 

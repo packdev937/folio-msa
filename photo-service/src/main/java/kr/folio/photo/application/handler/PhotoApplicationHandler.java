@@ -2,10 +2,9 @@ package kr.folio.photo.application.handler;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import kr.folio.infrastructure.kafka.producer.GenericEventPublisher;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
-import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
 import kr.folio.photo.application.ports.output.PhotoRepository;
 import kr.folio.photo.domain.core.entity.Photo;
 import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
@@ -34,9 +33,8 @@ public class PhotoApplicationHandler {
     private final PhotoDomainUseCase photoDomainUseCase;
     private final PhotoRepository photoRepository;
     private final PhotoDataMapper photoDataMapper;
-
     @Qualifier("CreatedPhotoEventKafkaPublisher")
-    private final PhotoMessagePublisher createdPhotoMessagePublisher;
+    private final GenericEventPublisher createdPhotoMessagePublisher;
 
     @Transactional
     public CreatePhotoResponse createPhoto(CreatePhotoRequest createPhotoRequest) {
