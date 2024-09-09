@@ -57,6 +57,12 @@ public class PhotoDomainService implements PhotoDomainUseCase {
         photo.updatePhotoImageUrl(updatePhotoImageUrl);
     }
 
+    @Override
+    public Photo deleteUserFromTag(Photo photo, String userId) {
+        photo.deleteUserFromTag(userId);
+        return photo;
+    }
+
     @Cacheable(value = "trend", key = "#ageGroup.name().toLowerCase()")
     public List<Photo> retrieveCachedRecommendedPhotos(AgeGroup ageGroup) {
         return List.of();

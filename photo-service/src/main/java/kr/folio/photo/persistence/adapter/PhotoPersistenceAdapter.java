@@ -53,4 +53,20 @@ public class PhotoPersistenceAdapter implements PhotoRepository {
             .map(photoPersistenceMapper::toDomain)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Photo> findPhotosByTaggedUserId(String userId) {
+        return photoJpaRepository.findPhotosByTaggedUserIdsContains(userId).stream()
+            .map(photoPersistenceMapper::toDomain)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveAll(List<Photo> photos) {
+        photoJpaRepository.saveAll(
+            photos.stream()
+	.map(photoPersistenceMapper::toEntity)
+	.collect(Collectors.toList())
+        );
+    }
 }

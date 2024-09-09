@@ -38,4 +38,16 @@ public class FakePhotoRepository implements PhotoRepository {
     public List<Photo> findAll() {
         return new ArrayList<>(photoStorage.values());
     }
+
+    @Override
+    public List<Photo> findPhotosByTaggedUserId(String userId) {
+        return photoStorage.values().stream()
+            .filter(photo -> photo.getTaggedUserIds().contains(userId))
+            .toList();
+    }
+
+    @Override
+    public void saveAll(List<Photo> photos) {
+        photos.forEach(this::save);
+    }
 }

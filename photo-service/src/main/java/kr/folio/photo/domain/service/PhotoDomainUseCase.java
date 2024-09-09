@@ -18,4 +18,6 @@ public interface PhotoDomainUseCase {
     List<Photo> cacheRecommendedPhotos(List<Photo> recommendedPhotos, AgeGroup ageGroup);
 
     void updatePhotoImageUrl(Photo photo, String updatedPhotoImageUrl);
+
+    Photo deleteUserFromTag(Photo photo, String userId);
 }

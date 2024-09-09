@@ -3,6 +3,7 @@ package kr.folio.photo.application.handler;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
 import kr.folio.photo.application.ports.output.PhotoRepository;
@@ -120,7 +121,8 @@ public class PhotoApplicationHandler {
         );
     }
 
-    private UpdatePhotoResponse updatePhotoField(Photo photo,
+    private UpdatePhotoResponse updatePhotoField(
+        Photo photo,
         Consumer<Photo> updateFunction) {
 
         updateFunction.accept(photo);
@@ -133,6 +135,7 @@ public class PhotoApplicationHandler {
         );
     }
 
+    @Transactional
     public DeletePhotoResponse deletePhoto(Long photoId) {
 
         photoRepository.deletePhotoById(photoId);
@@ -140,10 +143,14 @@ public class PhotoApplicationHandler {
         return photoDataMapper.toDeleteResponse(photoId, "포토가 정상적으로 삭제되었습니다");
     }
 
+    @Transactional
     public void deleteUserFromTag(String userId) {
-        // todo : QueryDsl로 구현
-        //        List<Photo> photos = photoRepository.findPhotosByUserId(userId);
 
+        List<Photo> photos = photoRepository.findPhotosByTaggedUserId(userId);
+
+        photoRepository.saveAll(photos.stream()
+            .map(photo -> photoDomainUseCase.deleteUserFromTag(photo, userId))
+            .collect(Collectors.toList()));
     }
 
     private Photo findPhotoById(Long photoId) {

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoMessagePublisher;
 import kr.folio.photo.application.ports.output.PhotoRepository;
@@ -108,6 +107,19 @@ class PhotoApplicationHandlerTest {
         assertThat(response.photoId()).isEqualTo(photoId);
         assertThat(response.message()).isEqualTo("포토가 정상적으로 삭제되었습니다");
         assertThat(photoRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    void 태그된_유저를_삭제한다() {
+        // Given
+        Long photoId = 포토_생성();
+
+        // When
+        photoApplicationHandler.deleteUserFromTag("yeddin");
+
+        // Then
+        assertThat(photoRepository.findPhotosByTaggedUserId("yeddin").size()).isEqualTo(0);
+        assertThat(photoRepository.findPhotosByTaggedUserId("siyeon").size()).isEqualTo(1);
     }
 
     private Long 포토_생성() {

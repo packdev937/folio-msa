@@ -15,4 +15,7 @@ public interface PhotoRepository {
 
     List<Photo> findLatestPhotos();
     List<Photo> findAll();
+
+    List<Photo> findPhotosByTaggedUserId(String userId);
+    void saveAll(List<Photo> photos);
 }

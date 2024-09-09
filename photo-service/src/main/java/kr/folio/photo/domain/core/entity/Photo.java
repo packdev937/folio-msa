@@ -36,4 +36,10 @@ public class Photo {
     public void setId(long id) {
         this.photoId = id;
     }
+
+    public void deleteUserFromTag(String userId) {
+        if (taggedUserIds.contains(userId)) {
+            taggedUserIds.remove(userId);
+        }
+    }
 }
