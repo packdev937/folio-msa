@@ -1,15 +1,12 @@
 package kr.folio.photo.domain.service;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import kr.folio.photo.domain.core.entity.Photo;
-import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
 import kr.folio.photo.domain.core.vo.AgeGroup;
 import kr.folio.photo.infrastructure.annotation.DomainService;
-import kr.folio.photo.presentation.dto.event.CreatedPhotoEventDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -68,14 +65,4 @@ public class PhotoDomainService implements PhotoDomainUseCase {
         return List.of();
     }
 
-    @Override
-    public CreatedPhotoEvent createPhotoEvent(Photo photo) {
-        CreatedPhotoEventDTO createdPhotoEventDTO =
-            new CreatedPhotoEventDTO(
-	photo.getPhotoId(),
-	photo.getPhotoImageUrl(),
-	photo.getTaggedUserIds());
-
-        return new CreatedPhotoEvent(createdPhotoEventDTO, ZonedDateTime.now(ZoneId.of(UTC)));
-    }
 }

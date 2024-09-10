@@ -7,6 +7,7 @@ import java.util.Arrays;
 import kr.folio.infrastructure.kafka.producer.GenericEventPublisher;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoRepository;
+import kr.folio.photo.application.service.PhotoEventService;
 import kr.folio.photo.domain.core.vo.BrandType;
 import kr.folio.photo.domain.service.PhotoDomainService;
 import kr.folio.photo.domain.service.PhotoDomainUseCase;
@@ -26,7 +27,7 @@ class PhotoApplicationHandlerTest {
     private PhotoDomainUseCase photoDomainService;
     private PhotoRepository photoRepository;
     private PhotoDataMapper photoDataMapper;
-    private GenericEventPublisher photoMessagePublisher;
+    private PhotoEventService photoEventService;
     private PhotoApplicationHandler photoApplicationHandler;
 
     @BeforeEach
@@ -34,9 +35,9 @@ class PhotoApplicationHandlerTest {
         photoDomainService = new PhotoDomainService();
         photoRepository = new FakePhotoRepository();
         photoDataMapper = new PhotoDataMapper();
-        photoMessagePublisher = new FakePhotoMessagePublisher();
+        photoEventService= new PhotoEventService(null);
         photoApplicationHandler = new PhotoApplicationHandler(photoDomainService, photoRepository,
-            photoDataMapper, photoMessagePublisher);
+            photoDataMapper, photoEventService);
     }
 
     @Test

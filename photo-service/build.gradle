@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     // Module
+    implementation project(':common')
     implementation project(':infrastructure')
 
     // Spring

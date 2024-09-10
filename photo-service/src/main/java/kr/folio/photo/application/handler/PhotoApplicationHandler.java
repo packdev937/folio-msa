@@ -3,11 +3,11 @@ package kr.folio.photo.application.handler;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import kr.folio.infrastructure.kafka.producer.GenericEventPublisher;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
 import kr.folio.photo.application.ports.output.PhotoRepository;
+import kr.folio.photo.application.service.PhotoEventService;
 import kr.folio.photo.domain.core.entity.Photo;
-import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
+import kr.folio.photo.domain.core.event.PhotoCreatedExternalEvent;
 import kr.folio.photo.domain.service.PhotoDomainUseCase;
 import kr.folio.photo.infrastructure.exception.PhotoNotCreatedException;
 import kr.folio.photo.infrastructure.exception.PhotoNotFoundException;
@@ -19,8 +19,6 @@ import kr.folio.photo.presentation.dto.response.RetrievePhotoResponse;
 import kr.folio.photo.presentation.dto.response.UpdatePhotoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.kafka.KafkaException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +31,7 @@ public class PhotoApplicationHandler {
     private final PhotoDomainUseCase photoDomainUseCase;
     private final PhotoRepository photoRepository;
     private final PhotoDataMapper photoDataMapper;
-    @Qualifier("CreatedPhotoEventKafkaPublisher")
-    private final GenericEventPublisher createdPhotoMessagePublisher;
+    private final PhotoEventService photoEventService;
 
     @Transactional
     public CreatePhotoResponse createPhoto(CreatePhotoRequest createPhotoRequest) {
@@ -44,36 +41,18 @@ public class PhotoApplicationHandler {
         Photo photo = photoDataMapper.toDomain(createPhotoRequest, userIds);
         Photo savedPhoto = photoRepository.save(photo);
 
-        publishCreatedPhotoEvent(savedPhoto);
 
         if (savedPhoto == null) {
-            log.error("Could not create photo. Request User ID : {}",
-	createPhotoRequest.requestUserId());
-
+            log.error("Could not create photo. Request User ID : {}", createPhotoRequest.requestUserId());
             throw new PhotoNotCreatedException();
         }
 
-        log.info("Returning CreatePhotoRequest for photo. Request User ID : {}",
-            createPhotoRequest.requestUserId());
+        photoEventService.publishEvent(PhotoCreatedExternalEvent.of(savedPhoto));
 
         return photoDataMapper.toCreateResponse(
             savedPhoto.getPhotoId(),
             "포토가 정상적으로 생성되었습니다."
         );
-    }
-
-    private void publishCreatedPhotoEvent(Photo photo) {
-
-        CreatedPhotoEvent createdPhotoEvent = photoDomainUseCase.createPhotoEvent(photo);
-
-        try {
-            createdPhotoMessagePublisher.publish(createdPhotoEvent);
-        } catch (KafkaException kafkaException) {
-            log.error("Failed to publish CreatedPhotoEvent for photo ID: {}", photo.getPhotoId(),
-	kafkaException);
-        }
-
-        log.info("Returning CreatedPhotoEvent for photo. Photo ID : {}", photo.getPhotoId());
     }
 
     private List<String> addUploaderToTaggerUsers(CreatePhotoRequest createPhotoRequest) {

@@ -6,4 +6,6 @@ include 'feed-service'
 include 'photo-service'
 include 'gateway-service'
 include 'infrastructure'
+include 'follow-service'
+include 'common'
 

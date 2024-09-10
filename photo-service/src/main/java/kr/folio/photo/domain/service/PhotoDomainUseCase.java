@@ -3,12 +3,9 @@ package kr.folio.photo.domain.service;
 import java.util.List;
 import java.util.Map;
 import kr.folio.photo.domain.core.entity.Photo;
-import kr.folio.photo.domain.core.event.CreatedPhotoEvent;
 import kr.folio.photo.domain.core.vo.AgeGroup;
 
 public interface PhotoDomainUseCase {
-
-    CreatedPhotoEvent createPhotoEvent(Photo photo);
 
     List<Photo> retrieveCachedRecommendedPhotos(AgeGroup ageGroup);
 
