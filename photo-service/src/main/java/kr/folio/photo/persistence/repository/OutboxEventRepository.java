@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OutboxEventRepository extends JpaRepository<OutboxEvent, Long> {
 
     List<OutboxEvent> findByStatus(String status);
+
+    List<OutboxEvent> findByStatusAndEventType(String pending, String photoCreatedEvent);
 }

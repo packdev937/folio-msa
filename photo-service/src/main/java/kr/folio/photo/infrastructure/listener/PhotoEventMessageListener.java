@@ -22,7 +22,8 @@ public class PhotoEventMessageListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendEvent(PhotoCreatedExternalEvent event) {
         // 트랜잭션이 커밋된 후 Outbox 테이블에서 이벤트를 읽어 Kafka로 전송
-        List<OutboxEvent> pendingEvents = outboxEventRepository.findByStatus("PENDING");
+        // todo : 문자열을 상수화
+        List<OutboxEvent> pendingEvents = outboxEventRepository.findByStatusAndEventType("PENDING", "PhotoCreatedEvent");
 
         for (OutboxEvent outboxEvent : pendingEvents) {
             try {
