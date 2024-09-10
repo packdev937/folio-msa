@@ -1,0 +1,65 @@
+spring:
+  config:
+    import: "optional:classpath:secrets.yml"
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOSTNAME}/${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  sql:
+    init:
+      platform: mysql
+      # application 시작 시 data.sql에 작성된 코드로 database를 초기화 하도록 지정
+#      mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: update # create-drop, update, validate, none
+    properties:
+      hibernate:
+        format_sql: false # SQL 포맷팅
+        show_sql: false # SQL 출력
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+springdoc:
+  swagger-ui:
+    # Swagger UI 페이지에 대한 경로
+    path: /swagger-ui.html
+    # Group 별 정렬 기준 (ASC 오름차순, DESC 내림차순)
+    groups-order: DESC
+    # API 목록 내 정렬 기준 (method, alpha)
+    operationsSorter: method
+    # Swagger UI가 로드될 때 기본적으로 제공하는 예제 URL 생략
+    disable-swagger-default-url: true
+    # API 요청 시 실행 시간을 표시
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /**
+
+jwt:
+  secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO1Yw3JpBBgI3nVPEahqxeY8qbPSFGyzyEVxnl4AQcrnVneI
+  issuer: duduk.shop
+  access:
+    expiration: 3600000 # 1시간 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization
+  refresh:
+    expiration: 1209600000 # 2주 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: Authorization-refresh
+
+cloud:
+  aws:
+    s3:
+      bucket: ${cloud.aws.s3.bucket}
+    stack:
+      auto: ${cloud.aws.stack.auto}
+    region:
+      static: ${cloud.aws.region.static}
+    credentials:
+      access-key: ${cloud.aws.credentials.access-key}
+      secret-key: ${cloud.aws.credentials.secret-key}
