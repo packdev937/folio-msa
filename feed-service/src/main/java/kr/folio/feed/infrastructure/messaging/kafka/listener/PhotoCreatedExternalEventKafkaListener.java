@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class PhotoCreatedExternalEventKafkaListener implements KafkaConsumer<PhotoCreatedExternalEvent> {
+public class PhotoCreatedExternalEventKafkaListener implements
+    KafkaConsumer<PhotoCreatedExternalEvent> {
 
     private final PhotoCreatedMessageListener photoCreatedMessageListener;
     private final ObjectMapper objectMapper;
@@ -23,42 +24,15 @@ public class PhotoCreatedExternalEventKafkaListener implements KafkaConsumer<Pho
     @KafkaListener(topics = "photo_created_topic", containerFactory = "kafkaListenerContainerFactory")
     @Override
     public void receive(String message) {
+
         try {
-            PhotoCreatedExternalEvent event = objectMapper.readValue(message, PhotoCreatedExternalEvent.class);
+            PhotoCreatedExternalEvent event = objectMapper.readValue(message,
+	PhotoCreatedExternalEvent.class);
             log.info("Received PhotoCreatedExternalEvent: {} at PhotoCreatedExternalEventKafkaListener", event);
 
-            photoCreatedMessageListener
-            handleEvent(event);
+            photoCreatedMessageListener.handleEvent(event);
         } catch (Exception exception) {
             log.error("Failed to deserialize JSON message to PhotoCreatedExternalEvent", exception);
-        }
-    }
-
-    public void handleEvent(PhotoCreatedExternalEvent event) {
-        log.info("Handling event to create feeds by CreatePhotoEvent: {}", event);
-
-        if (event.getUserIds() != null) {
-            event.getUserIds().forEach(
-	userId -> {
-	    try {
-	        List<String> taggedUserIds = event.getUserIds();
-	        taggedUserIds.remove(userId);
-
-	        feedApplicationUseCase.createFeed(
-	            new CreateFeedRequest(
-		userId,
-		event.getAggregateId(),
-		event.getPhotoImageUrl(),
-		taggedUserIds
-	            )
-	        );
-	    } catch (Exception e) {
-	        log.error("Failed to create feed for user: {}", userId, e);
-	    }
-	}
-            );
-        } else {
-            log.warn("No tagged user IDs in the event");
         }
     }
 }
