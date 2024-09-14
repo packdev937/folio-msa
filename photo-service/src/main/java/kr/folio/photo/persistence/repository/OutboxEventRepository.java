@@ -1,12 +1,13 @@
 package kr.folio.photo.persistence.repository;
 
 import java.util.List;
-import kr.folio.photo.persistence.event.PhotoOutboxEvent;
+import kr.folio.infrastructure.outbox.OutboxStatus;
+import kr.folio.photo.persistence.entity.PhotoOutboxEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OutboxEventRepository extends JpaRepository<PhotoOutboxEvent, Long> {
+public interface OutboxEventRepository extends JpaRepository<PhotoOutboxEntity, Long> {
 
-    List<PhotoOutboxEvent> findByStatus(String status);
+    List<PhotoOutboxEntity> findByOutboxStatus(OutboxStatus outboxStatus);
 
-    List<PhotoOutboxEvent> findByStatusAndEventType(String pending, String photoCreatedEvent);
+    List<PhotoOutboxEntity> findByOutboxStatusAndEventType(OutboxStatus outboxStatus, String eventType);
 }

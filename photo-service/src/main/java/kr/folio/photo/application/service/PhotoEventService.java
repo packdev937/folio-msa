@@ -1,5 +1,6 @@
 package kr.folio.photo.application.service;
 
+import java.util.UUID;
 import kr.folio.photo.domain.core.event.PhotoExternalEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

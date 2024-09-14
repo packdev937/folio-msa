@@ -1,6 +1,7 @@
 package kr.folio.photo.application.handler;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import kr.folio.photo.application.mapper.PhotoDataMapper;
