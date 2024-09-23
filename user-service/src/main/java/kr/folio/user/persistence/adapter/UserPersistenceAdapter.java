@@ -7,7 +7,6 @@ import kr.folio.user.infrastructure.annotation.Adapter;
 import kr.folio.user.persistence.mapper.UserPersistenceMapper;
 import kr.folio.user.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Adapter

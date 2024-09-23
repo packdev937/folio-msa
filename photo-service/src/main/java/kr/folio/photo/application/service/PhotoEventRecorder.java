@@ -31,7 +31,6 @@ public class PhotoEventRecorder {
             .payload(payload)
             .outboxStatus(OutboxStatus.STARTED)
             .sagaStatus(SagaStatus.STARTED)
-            .createdAt(photoCreatedExternalEvent.getCreatedAt())
             .build();
 
         outboxEventRepository.save(outboxEvent);

@@ -2,8 +2,11 @@ package kr.folio.user.application.handler;
 
 import feign.FeignException;
 import java.util.function.Consumer;
+import kr.folio.common.domain.core.event.user.UserDeletedExternalEvent;
 import kr.folio.user.application.mapper.UserDataMapper;
+import kr.folio.user.application.mapper.UserEventMapper;
 import kr.folio.user.application.ports.output.UserRepository;
+import kr.folio.user.application.service.UserEventService;
 import kr.folio.user.domain.core.entity.User;
 import kr.folio.user.domain.service.UserDomainUseCase;
 import kr.folio.user.infrastructure.client.FeedServiceClient;
@@ -36,6 +39,8 @@ public class UserApplicationHandler {
     private final UserRepository userRepository;
     private final UserDataMapper userDataMapper;
     private final FeedServiceClient feedServiceClient;
+    private final UserEventService userEventService;
+    private final UserEventMapper userEventMapper;
 
     @Transactional
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -124,7 +129,11 @@ public class UserApplicationHandler {
     @Transactional
     public DeleteUserResponse deleteUser(String requestUserId) {
         User user = findUserByIdOrThrow(requestUserId);
+
         userRepository.deleteUser(user);
+
+        userEventService.publishEvent(userEventMapper.toDeletedExternalEvent(user));
+
         return new DeleteUserResponse(requestUserId, "회원 탈퇴 처리가 되었습니다.");
     }
 

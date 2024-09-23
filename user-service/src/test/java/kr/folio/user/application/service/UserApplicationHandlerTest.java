@@ -30,16 +30,16 @@ class UserApplicationHandlerTest {
 
     private UserDomainUseCase userDomainService;
     private UserRepository userRepository;
-    private UserDataMapper userDataMapper;
     private UserApplicationHandler userApplicationHandler;
+    private UserEventService userEventService;
 
     @BeforeEach
     void setUp() {
         userDomainService = new UserDomainService();
         userRepository = new FakeUserRepository();
-        userDataMapper = new UserDataMapper();
+        userEventService = new UserEventService(null);
         userApplicationHandler = new UserApplicationHandler(userDomainService, userRepository,
-            userDataMapper, null);
+            null, null, userEventService, null);
     }
 
     @Test

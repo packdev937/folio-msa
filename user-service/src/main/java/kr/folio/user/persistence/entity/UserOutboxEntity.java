@@ -1,4 +1,4 @@
-package kr.folio.photo.persistence.entity;
+package kr.folio.user.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "photo_outbox")
-public class PhotoOutboxEntity extends BaseEntity {
+@Table(name = "user_outbox")
+public class UserOutboxEntity extends BaseEntity {
 
     @Id
     private UUID id;
@@ -37,16 +37,15 @@ public class PhotoOutboxEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SagaStatus sagaStatus;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PhotoOutboxEntity that)) {
+        if (!(o instanceof UserOutboxEntity e)) {
             return false;
         }
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, e.id);
     }
 
     @Override
@@ -62,3 +61,4 @@ public class PhotoOutboxEntity extends BaseEntity {
         this.sagaStatus = sagaStatus;
     }
 }
+

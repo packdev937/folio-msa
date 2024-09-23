@@ -35,12 +35,10 @@ public class PhotoEventMessenger {
 
         for (PhotoOutboxEntity outbox : outboxes) {
             try {
-
                 photoCreatedEventKafkaPublisher.publish(
                     outbox,
                     this::updateOutboxStatus
                 );
-
                 outbox.updateOutboxStatus(OutboxStatus.COMPLETED);
                 outbox.updateSagaStatus(SagaStatus.PROCESSING);
                 outboxEventRepository.save(outbox);
