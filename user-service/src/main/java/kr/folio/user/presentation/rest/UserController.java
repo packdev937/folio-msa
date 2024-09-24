@@ -105,7 +105,7 @@ public class UserController implements UserControllerDocs {
     public ResponseEntity<UpdateUserResponse> updateUserProfileImage(String requestUserId,
         UpdateProfileImageUrlRequest updateProfileImageUrlRequest) {
         log.info("Updating user profile. User ID : {} Updating ImageUrl : {} ",
-            requestUserId, updateProfileImageUrlRequest.profileImageUrl());
+            requestUserId, updateProfileImageUrlRequest.profileImageFile());
 
         return new ResponseEntity<>(
             userApplicationUseCase.updateUserProfileImage(requestUserId,

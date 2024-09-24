@@ -67,7 +67,7 @@ public interface UserControllerDocs {
     @PostMapping("/profile")
     ResponseEntity<UpdateUserResponse> updateUserProfileImage(
         @CurrentUserId String requestUserId,
-        @Valid @RequestBody UpdateProfileImageUrlRequest updateProfileImageUrlRequest);
+        @RequestPart UpdateProfileImageUrlRequest updateProfileImageUrlRequest);
 
     @Operation(summary = "유저 삭제", description = "유저를 삭제합니다.")
     @DeleteMapping

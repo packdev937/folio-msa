@@ -2,7 +2,6 @@ package kr.folio.user.application.handler;
 
 import feign.FeignException;
 import java.util.function.Consumer;
-import kr.folio.common.domain.core.event.user.UserDeletedExternalEvent;
 import kr.folio.user.application.mapper.UserDataMapper;
 import kr.folio.user.application.mapper.UserEventMapper;
 import kr.folio.user.application.ports.output.UserRepository;
@@ -38,9 +37,12 @@ public class UserApplicationHandler {
     private final UserDomainUseCase userDomainService;
     private final UserRepository userRepository;
     private final UserDataMapper userDataMapper;
-    private final FeedServiceClient feedServiceClient;
     private final UserEventService userEventService;
     private final UserEventMapper userEventMapper;
+
+    private final FeedServiceClient feedServiceClient;
+
+    private final ObjectStorageHandler objectStorageHandler;
 
     @Transactional
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -122,8 +124,17 @@ public class UserApplicationHandler {
     @Transactional
     public UpdateUserResponse updateUserProfileImage(String requestUserId,
         UpdateProfileImageUrlRequest request) {
-        return updateUserField(requestUserId,
-            user -> userDomainService.updateUserProfileImage(user, request.profileImageUrl()));
+        try {
+            String profileImageUrl = objectStorageHandler.uploadFile(request.profileImageFile());
+
+            return updateUserField(
+                requestUserId,
+	user -> userDomainService.updateUserProfileImage(user, profileImageUrl));
+        } catch (Exception exception) {
+            log.error("Could not upload profile image file at {}", this.getClass().getSimpleName(), exception);
+
+            throw new RuntimeException("프로필 이미지 업로드에 실패했습니다.");
+        }
     }
 
     @Transactional
