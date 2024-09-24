@@ -10,10 +10,12 @@ import kr.folio.infrastructure.saga.SagaStatus;
 import kr.folio.user.persistence.entity.UserOutboxEntity;
 import kr.folio.user.persistence.repository.UserOutboxJpaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class UserEventRecorder {
@@ -36,6 +38,7 @@ public class UserEventRecorder {
 	.sagaStatus(SagaStatus.STARTED)
 	.build();
 
+            log.info("Recording event type {} at {}", event.getEventType(), UserEventRecorder.class.getSimpleName());
             saveOutboxEvent(outboxEvent);
         }
     }
@@ -53,7 +56,8 @@ public class UserEventRecorder {
             return objectMapper.writeValueAsString(externalEvent);
         } catch (JsonProcessingException jsonProcessingException) {
             throw new RuntimeException(
-	"Failed to serialize " + externalEvent.getClass().getSimpleName(), jsonProcessingException);
+	"Failed to serialize " + externalEvent.getClass().getSimpleName(),
+	jsonProcessingException);
         }
     }
 }
