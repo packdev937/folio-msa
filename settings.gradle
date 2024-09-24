@@ -8,4 +8,5 @@ include 'gateway-service'
 include 'infrastructure'
 include 'follow-service'
 include 'common'
+include 'config-service'
 

@@ -2,9 +2,6 @@ server:
   port: 0
 
 spring:
-  config:
-    import: "optional:classpath:secrets.yml"
-
   datasource:
     driver-class-name: org.h2.Driver
     username: sa
@@ -40,3 +37,7 @@ cloud:
     credentials:
       access-key: ${cloud.aws.credentials.access-key}
       secret-key: ${cloud.aws.credentials.secret-key}
+
+kafka:
+  consumer:
+    group-id: user-service
