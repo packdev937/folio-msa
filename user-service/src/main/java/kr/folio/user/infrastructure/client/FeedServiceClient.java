@@ -5,13 +5,15 @@ import kr.folio.user.presentation.dto.response.feed.FeedsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "feed-service")
+/*
+    name : Eureka 서버에 등록된 이름
+    path : 공통 URI
+ */
+@FeignClient(name = "feed-service", path = "/feeds")
 public interface FeedServiceClient {
 
-    @GetMapping("/feeds")
-    FeedsResponse retrieveFeeds(
-        @CurrentUserId String requestUserId
-    );
+    @GetMapping
+    FeedsResponse retrieveFeeds(@CurrentUserId String requestUserId);
 
 }
 

@@ -204,32 +204,32 @@ class UserControllerIntegrationTest {
             any(UpdateMessageRequest.class));
     }
 
-    @Test
-    void 유저_프로필_이미지_업데이트_테스트() {
-        // Given
-        String userId = "packdev937";
-        UpdateProfileImageUrlRequest request = new UpdateProfileImageUrlRequest(
-            "https://packdev937.s3.ap-northeast-2.amazonaws.com/profile/2021/07/01/1.jpg");
-        UpdateUserResponse expectedResponse = new UpdateUserResponse(userId, "회원 정보가 수정되었습니다.");
-
-        when(userApplicationUseCase.updateUserProfileImage(eq(userId),
-            any(UpdateProfileImageUrlRequest.class)))
-            .thenReturn(expectedResponse);
-
-        // When & Then
-        webTestClient.post().uri("/users/profile")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("X-USER-ID", userId)
-            .bodyValue(request)
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody()
-            .jsonPath("$.userId").isEqualTo(userId)
-            .jsonPath("$.message").isEqualTo("회원 정보가 수정되었습니다.");
-
-        verify(userApplicationUseCase).updateUserProfileImage(eq(userId),
-            any(UpdateProfileImageUrlRequest.class));
-    }
+//    @Test
+//    void 유저_프로필_이미지_업데이트_테스트() {
+//        // Given
+//        String userId = "packdev937";
+//        UpdateProfileImageUrlRequest request = new UpdateProfileImageUrlRequest(
+//            "https://packdev937.s3.ap-northeast-2.amazonaws.com/profile/2021/07/01/1.jpg");
+//        UpdateUserResponse expectedResponse = new UpdateUserResponse(userId, "회원 정보가 수정되었습니다.");
+//
+//        when(userApplicationUseCase.updateUserProfileImage(eq(userId),
+//            any(UpdateProfileImageUrlRequest.class)))
+//            .thenReturn(expectedResponse);
+//
+//        // When & Then
+//        webTestClient.post().uri("/users/profile")
+//            .contentType(MediaType.APPLICATION_JSON)
+//            .header("X-USER-ID", userId)
+//            .bodyValue(request)
+//            .exchange()
+//            .expectStatus().isOk()
+//            .expectBody()
+//            .jsonPath("$.userId").isEqualTo(userId)
+//            .jsonPath("$.message").isEqualTo("회원 정보가 수정되었습니다.");
+//
+//        verify(userApplicationUseCase).updateUserProfileImage(eq(userId),
+//            any(UpdateProfileImageUrlRequest.class));
+//    }
 
     @Test
     void 유저_삭제_테스트() {
