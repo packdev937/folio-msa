@@ -38,12 +38,12 @@ public interface UserControllerDocs {
     @Operation(summary = "아이디 중복 검증", description = "아이디 중복을 검증 합니다.")
     @GetMapping("/validation/id")
     ResponseEntity<ValidateUserResponse> validateUserId(
-        @RequestParam String id);
+        @RequestParam(name = "id") String id);
 
     @Operation(summary = "닉네임 중복 검증", description = "닉네임 중복을 검증 합니다.")
     @GetMapping("/validation/nickname")
     ResponseEntity<ValidateUserResponse> validateUserNickname(
-        @RequestParam String nickname);
+        @RequestParam(name = "nickname") String nickname);
 
     @Operation(summary = "유저 닉네임 변경", description = "유저 닉네임을 변경합니다.")
     @PostMapping("/nickname")

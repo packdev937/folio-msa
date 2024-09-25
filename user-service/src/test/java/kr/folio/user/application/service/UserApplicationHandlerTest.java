@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import kr.folio.user.application.handler.UserApplicationHandler;
 import kr.folio.user.application.mapper.UserDataMapper;
+import kr.folio.user.application.mapper.UserEventMapper;
 import kr.folio.user.application.ports.output.UserRepository;
 import kr.folio.user.domain.core.entity.User;
 import kr.folio.user.domain.service.UserDomainService;
@@ -24,6 +25,8 @@ import kr.folio.user.presentation.dto.response.user.ValidateUserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 
 @DisplayName("UserApplicationHandler 테스트")
 class UserApplicationHandlerTest {
@@ -31,15 +34,24 @@ class UserApplicationHandlerTest {
     private UserDomainUseCase userDomainService;
     private UserRepository userRepository;
     private UserApplicationHandler userApplicationHandler;
+    private UserDataMapper userDataMapper;
     private UserEventService userEventService;
+    private UserEventMapper userEventMapper;
 
     @BeforeEach
     void setUp() {
         userDomainService = new UserDomainService();
         userRepository = new FakeUserRepository();
-        userEventService = new UserEventService(null);
+        userDataMapper = new UserDataMapper();
+        userEventMapper = new UserEventMapper();
+        userEventService = new UserEventService(new ApplicationEventPublisher() {
+            @Override
+            public void publishEvent(Object event) {
+	// Do nothing
+            }
+        });
         userApplicationHandler = new UserApplicationHandler(userDomainService, userRepository,
-            null, userEventService, null, null, null);
+            userDataMapper, userEventService, userEventMapper, null, null);
     }
 
     @Test
