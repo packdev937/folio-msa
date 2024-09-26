@@ -49,6 +49,11 @@ public class FeedApplicationService implements FeedApplicationUseCase {
     }
 
     @Override
+    public void publishPhotoDeleteEvent(Long photoId) {
+        feedApplicationHandler.publishPhotoDeleteEvent(photoId);
+    }
+
+    @Override
     public List<Long> retrieveFeedIdsByUserId(String userId) {
         return feedApplicationHandler.retrieveFeedIdsByUserId(userId);
     }
@@ -66,7 +71,8 @@ public class FeedApplicationService implements FeedApplicationUseCase {
         String requestUserId,
         UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest) {
 
-        return feedApplicationHandler.updateFeedAccessRange(requestUserId, updateFeedAccessRangeRequest);
+        return feedApplicationHandler.updateFeedAccessRange(requestUserId,
+            updateFeedAccessRangeRequest);
     }
 
     @Override

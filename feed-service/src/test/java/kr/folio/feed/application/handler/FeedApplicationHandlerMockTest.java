@@ -12,7 +12,8 @@ import kr.folio.feed.application.ports.output.FeedRepository;
 import kr.folio.feed.domain.core.event.DeleteFeedEvent;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
 import kr.folio.feed.infrastructure.client.FollowServiceClient;
-import kr.folio.feed.infrastructure.messaging.kafka.publisher.PhotoDeleteEventKafkaPublisher;
+import kr.folio.feed.infrastructure.messaging.kafka.publisher.PhotoDeleteExternalEventKafkaPublisher;
+import kr.folio.feed.persistence.entity.FeedOutboxEntity;
 import kr.folio.feed.presentation.dto.event.DeleteFeedEventDTO;
 import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ public class FeedApplicationHandlerMockTest {
     private FollowServiceClient followServiceClient;
 
     @Mock
-    private PhotoDeleteEventKafkaPublisher deleteFeedEventKafkaPublisher;
+    private PhotoDeleteExternalEventKafkaPublisher deleteFeedEventKafkaPublisher;
 
     @InjectMocks
     private FeedApplicationHandler feedApplicationHandler;
@@ -71,7 +72,7 @@ public class FeedApplicationHandlerMockTest {
         verify(feedRepository).countFeedByPhotoId(photoId);
         verify(feedDomainService).isPhotoDeletable(feedCount);
         verify(feedDomainService).createDeleteFeedEvent(photoId);
-        verify(deleteFeedEventKafkaPublisher).publish(any(DeleteFeedEvent.class), any());
+        verify(deleteFeedEventKafkaPublisher).publish(any(FeedOutboxEntity.class), any());
     }
 
     @Test

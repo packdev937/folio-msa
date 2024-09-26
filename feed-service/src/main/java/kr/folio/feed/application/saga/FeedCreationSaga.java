@@ -36,7 +36,6 @@ public class FeedCreationSaga implements SagaStep<PhotoCreatedExternalEvent> {
                     );
                 } catch (Exception exception) {
                     log.error("Failed to create feed for user: {} at FeedCreationSaga", userId, exception);
-
                     throw new RuntimeException("피드 생성에 실패하였습니다. userId : " + userId, exception);
                 }
             });
@@ -50,5 +49,6 @@ public class FeedCreationSaga implements SagaStep<PhotoCreatedExternalEvent> {
         log.info("Rolling back feed creation for event: {}", event);
 
         feedApplicationUseCase.deleteAllFeedByPhotoId(event.getAggregateId());
+        feedApplicationUseCase.publishPhotoDeleteEvent(event.getAggregateId());
     }
 }

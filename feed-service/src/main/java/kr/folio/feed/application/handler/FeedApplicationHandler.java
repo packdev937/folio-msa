@@ -3,14 +3,15 @@ package kr.folio.feed.application.handler;
 import java.util.List;
 import java.util.stream.Collectors;
 import kr.folio.feed.application.mapper.FeedDataMapper;
+import kr.folio.feed.application.mapper.FeedEventMapper;
 import kr.folio.feed.application.ports.output.FeedRepository;
+import kr.folio.feed.application.service.FeedEventService;
 import kr.folio.feed.domain.core.entity.Feed;
 import kr.folio.feed.domain.core.vo.AccessRange;
 import kr.folio.feed.domain.core.vo.FollowStatus;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
 import kr.folio.feed.infrastructure.client.FollowServiceClient;
 import kr.folio.feed.infrastructure.exception.FeedNotFoundException;
-import kr.folio.feed.infrastructure.messaging.kafka.publisher.PhotoDeleteEventKafkaPublisher;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
@@ -34,7 +35,8 @@ public class FeedApplicationHandler {
     private final FeedDataMapper feedDataMapper;
     private final FollowServiceClient followServiceClient;
 
-    private final PhotoDeleteEventKafkaPublisher photoDeleteEventKafkaPublisher;
+    private final FeedEventService feedEventService;
+    private final FeedEventMapper feedEventMapper;
 
     public CreateFeedResponse createFeed(CreateFeedRequest createPhotoRequest) {
         // todo : 피드 생성 시 유저 정보를 초기화 해놓을까? 아니면 동적 조회 (캐싱)
@@ -52,7 +54,8 @@ public class FeedApplicationHandler {
 
     public RetrieveFeedDetailResponse retrieveFeedDetail(
         String requestUserId,
-        Long feedId) {
+        Long feedId
+    ) {
 
         String targetUserId = feedRepository.findUserIdByFeedId(feedId)
             .orElseThrow(() -> new IllegalStateException("FeedId에 해당하는 userId가 없습니다."));
@@ -73,7 +76,8 @@ public class FeedApplicationHandler {
 
     public FeedsResponse retrieveFeeds(
         String requestUserId,
-        String targetUserId) {
+        String targetUserId
+    ) {
 
         FollowStatus followStatus = followServiceClient.retrieveFollowStatus(
             requestUserId,
@@ -101,7 +105,8 @@ public class FeedApplicationHandler {
 
     private List<Feed> filterFeedsByAccessRange(
         List<Feed> feeds,
-        AccessRange accessRange) {
+        AccessRange accessRange
+    ) {
 
         return feeds.stream()
             .filter(feed -> feed.getAccessRange().isAccessible(accessRange))
@@ -110,15 +115,15 @@ public class FeedApplicationHandler {
 
     public UpdateFeedResponse updateFeedAccessRange(
         String requestUserId,
-        UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest) {
+        UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest
+    ) {
 
         Feed feed = feedRepository.findByFeedIdAndRequestUserId(
             updateFeedAccessRangeRequest.feedId(),
             requestUserId
         ).orElseThrow(FeedNotFoundException::new);
 
-        feedDomainUseCase.updateAccessRange(feed,
-            updateFeedAccessRangeRequest.updatedAccessRange());
+        feedDomainUseCase.updateAccessRange(feed, updateFeedAccessRangeRequest.updatedAccessRange());
         feedRepository.save(feed);
 
         return new UpdateFeedResponse(
@@ -170,12 +175,14 @@ public class FeedApplicationHandler {
         return new DeleteFeedResponse(photoId, "photoId로 생성된 피드가 성공적으로 제거되었습니다.");
     }
 
-    private void publishPhotoDeleteEvent(Long photoId) {
+    public void publishPhotoDeleteEvent(Long photoId) {
         try {
-
+            feedEventService.publishEvent(feedEventMapper.toPhotoDeleteExternalEvent(photoId));
         } catch (KafkaException kafkaException) {
-            log.error("Failed to publish delete feed event for photoId: {}", photoId,
-	kafkaException);
+            log.error("Failed to publish delete feed event for photoId: {}",
+                photoId,
+	kafkaException
+            );
         }
     }
 }

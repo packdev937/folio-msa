@@ -39,4 +39,6 @@ public interface FeedApplicationUseCase {
     DeleteFeedResponse deleteFeed(Long feedId);
 
     DeleteFeedResponse deleteAllFeedByPhotoId(Long photoId);
+
+    void publishPhotoDeleteEvent(Long photoId);
 }
