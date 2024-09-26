@@ -63,7 +63,10 @@ public class FeedApplicationService implements FeedApplicationUseCase {
         String requestUserId,
         String targetUserId) {
 
-        return feedApplicationHandler.retrieveFeeds(requestUserId, targetUserId);
+        return feedApplicationHandler.retrieveFeeds(
+            requestUserId,
+            targetUserId
+        );
     }
 
     @Override
@@ -71,8 +74,10 @@ public class FeedApplicationService implements FeedApplicationUseCase {
         String requestUserId,
         UpdateFeedAccessRangeRequest updateFeedAccessRangeRequest) {
 
-        return feedApplicationHandler.updateFeedAccessRange(requestUserId,
-            updateFeedAccessRangeRequest);
+        return feedApplicationHandler.updateFeedAccessRange(
+            requestUserId,
+            updateFeedAccessRangeRequest
+        );
     }
 
     @Override
@@ -80,6 +85,9 @@ public class FeedApplicationService implements FeedApplicationUseCase {
         String requestUserId,
         UpdateFeedImageUrlRequest updateFeedImageUriRequest) {
 
-        return feedApplicationHandler.updateFeedImageUrl(requestUserId, updateFeedImageUriRequest);
+        return feedApplicationHandler.updateFeedImageUrl(
+            requestUserId,
+            updateFeedImageUriRequest
+        );
     }
 }

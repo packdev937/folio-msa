@@ -16,7 +16,6 @@ public class PhotoCreatedMessageProcessor implements PhotoCreatedMessageListener
 
     @Override
     public void handleEvent(PhotoCreatedExternalEvent event) {
-
         log.info("Handling event for creating feeds: {} at PhotoCreatedMessageProcessor", event);
 
         try {
@@ -28,4 +27,3 @@ public class PhotoCreatedMessageProcessor implements PhotoCreatedMessageListener
     }
 }
 
-// todo : 추후 이벤트는 Avro 데이터로 수신한 뒤 Message로 변환될거기 때문에 Message를 붙이는게 맞는듯
