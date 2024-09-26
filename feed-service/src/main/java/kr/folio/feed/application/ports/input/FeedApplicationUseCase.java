@@ -19,14 +19,12 @@ public interface FeedApplicationUseCase {
         Long feedId
     );
 
-    DeleteFeedResponse deleteFeed(Long feedId);
-
-    List<Long> retrieveFeedIdsByUserId(String userId);
-
     FeedsResponse retrieveFeeds(
         String requestUserId,
         String targetUserId
     );
+
+    List<Long> retrieveFeedIdsByUserId(String userId);
 
     UpdateFeedResponse updateFeedAccessRange(
         String requestUserId,
@@ -37,4 +35,8 @@ public interface FeedApplicationUseCase {
         String requestUserId,
         UpdateFeedImageUrlRequest updateFeedImageUriRequest
     );
+
+    DeleteFeedResponse deleteFeed(Long feedId);
+
+    DeleteFeedResponse deleteAllFeedByPhotoId(Long photoId);
 }

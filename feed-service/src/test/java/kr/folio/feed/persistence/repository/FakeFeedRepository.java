@@ -76,4 +76,20 @@ public class FakeFeedRepository implements FeedRepository {
         }
         return feedIds;
     }
+
+    @Override
+    public void deleteAllFeedByPhotoId(Long photoId) {
+        List<Long> feedIds = new ArrayList<>();
+
+        for (Map.Entry<Long, Feed> entry : feedStorage.entrySet()) {
+            if (entry.getValue().getPhotoId().equals(photoId)) {
+	feedIds.add(entry.getKey());
+            }
+        }
+
+        for (Long feedId : feedIds) {
+            feedStorage.remove(feedId);
+            userFeedMap.remove(feedId);
+        }
+    }
 }

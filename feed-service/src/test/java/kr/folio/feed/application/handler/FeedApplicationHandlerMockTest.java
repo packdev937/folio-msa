@@ -1,6 +1,5 @@
 package kr.folio.feed.application.handler;
 
-import static kr.folio.feed.common.FeedSteps.피드_생성;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,7 +12,7 @@ import kr.folio.feed.application.ports.output.FeedRepository;
 import kr.folio.feed.domain.core.event.DeleteFeedEvent;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
 import kr.folio.feed.infrastructure.client.FollowServiceClient;
-import kr.folio.feed.infrastructure.publisher.DeleteFeedEventKafkaPublisher;
+import kr.folio.feed.infrastructure.messaging.kafka.publisher.PhotoDeleteEventKafkaPublisher;
 import kr.folio.feed.presentation.dto.event.DeleteFeedEventDTO;
 import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ public class FeedApplicationHandlerMockTest {
     private FollowServiceClient followServiceClient;
 
     @Mock
-    private DeleteFeedEventKafkaPublisher deleteFeedEventKafkaPublisher;
+    private PhotoDeleteEventKafkaPublisher deleteFeedEventKafkaPublisher;
 
     @InjectMocks
     private FeedApplicationHandler feedApplicationHandler;
@@ -72,7 +71,7 @@ public class FeedApplicationHandlerMockTest {
         verify(feedRepository).countFeedByPhotoId(photoId);
         verify(feedDomainService).isPhotoDeletable(feedCount);
         verify(feedDomainService).createDeleteFeedEvent(photoId);
-        verify(deleteFeedEventKafkaPublisher).publish(any(DeleteFeedEvent.class));
+        verify(deleteFeedEventKafkaPublisher).publish(any(DeleteFeedEvent.class), any());
     }
 
     @Test

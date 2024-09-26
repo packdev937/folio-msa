@@ -23,4 +23,6 @@ public interface FeedRepository {
     Optional<String> findUserIdByFeedId(Long feedId);
 
     List<Long> findFeedIdsByUserId(String userId);
+
+    void deleteAllFeedByPhotoId(Long photoId);
 }

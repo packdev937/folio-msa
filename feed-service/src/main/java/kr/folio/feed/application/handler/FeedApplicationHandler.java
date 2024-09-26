@@ -5,13 +5,12 @@ import java.util.stream.Collectors;
 import kr.folio.feed.application.mapper.FeedDataMapper;
 import kr.folio.feed.application.ports.output.FeedRepository;
 import kr.folio.feed.domain.core.entity.Feed;
-import kr.folio.feed.domain.core.event.DeleteFeedEvent;
 import kr.folio.feed.domain.core.vo.AccessRange;
 import kr.folio.feed.domain.core.vo.FollowStatus;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
 import kr.folio.feed.infrastructure.client.FollowServiceClient;
 import kr.folio.feed.infrastructure.exception.FeedNotFoundException;
-import kr.folio.feed.infrastructure.publisher.DeleteFeedEventKafkaPublisher;
+import kr.folio.feed.infrastructure.messaging.kafka.publisher.PhotoDeleteEventKafkaPublisher;
 import kr.folio.feed.presentation.dto.request.CreateFeedRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedAccessRangeRequest;
 import kr.folio.feed.presentation.dto.request.UpdateFeedImageUrlRequest;
@@ -34,10 +33,10 @@ public class FeedApplicationHandler {
     private final FeedRepository feedRepository;
     private final FeedDataMapper feedDataMapper;
     private final FollowServiceClient followServiceClient;
-    private final DeleteFeedEventKafkaPublisher deleteFeedEventKafkaPublisher;
+
+    private final PhotoDeleteEventKafkaPublisher photoDeleteEventKafkaPublisher;
 
     public CreateFeedResponse createFeed(CreateFeedRequest createPhotoRequest) {
-
         // todo : 피드 생성 시 유저 정보를 초기화 해놓을까? 아니면 동적 조회 (캐싱)
 
         Feed feed = feedDataMapper.toDomain(createPhotoRequest);
@@ -96,6 +95,10 @@ public class FeedApplicationHandler {
         return feedDataMapper.toFeedsResponse(feeds);
     }
 
+    public List<Long> retrieveFeedIdsByUserId(String userId) {
+        return feedRepository.findFeedIdsByUserId(userId);
+    }
+
     private List<Feed> filterFeedsByAccessRange(
         List<Feed> feeds,
         AccessRange accessRange) {
@@ -149,26 +152,30 @@ public class FeedApplicationHandler {
         int feedCount = feedRepository.countFeedByPhotoId(photoId);
 
         if (isDeletable(feedCount)) {
-            publishDeleteFeedEvent(photoId);
+            publishPhotoDeleteEvent(photoId);
         }
 
         return new DeleteFeedResponse(feedId, "피드가 성공적으로 제거되었습니다.");
     }
 
     private boolean isDeletable(int feedCount) {
+
         return feedDomainUseCase.isPhotoDeletable(feedCount);
     }
 
-    private void publishDeleteFeedEvent(Long photoId) {
-        try {
-            DeleteFeedEvent deleteFeedEvent = feedDomainUseCase.createDeleteFeedEvent(photoId);
-            deleteFeedEventKafkaPublisher.publish(deleteFeedEvent);
-        } catch (KafkaException kafkaException) {
-            log.error("Failed to publish delete feed event for photoId: {}", photoId, kafkaException);
-        }
+    public DeleteFeedResponse deleteAllFeedByPhotoId(Long photoId) {
+        log.info("Deleting all feeds by photoId: {}", photoId);
+
+        feedRepository.deleteAllFeedByPhotoId(photoId);
+        return new DeleteFeedResponse(photoId, "photoId로 생성된 피드가 성공적으로 제거되었습니다.");
     }
 
-    public List<Long> retrieveFeedIdsByUserId(String userId) {
-        return feedRepository.findFeedIdsByUserId(userId);
+    private void publishPhotoDeleteEvent(Long photoId) {
+        try {
+
+        } catch (KafkaException kafkaException) {
+            log.error("Failed to publish delete feed event for photoId: {}", photoId,
+	kafkaException);
+        }
     }
 }

@@ -5,6 +5,9 @@ import java.util.Optional;
 import kr.folio.feed.domain.core.entity.Feed;
 import kr.folio.feed.persistence.entity.FeedEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface FeedJpaRepository extends JpaRepository<FeedEntity, Long> {
 
@@ -19,4 +22,9 @@ public interface FeedJpaRepository extends JpaRepository<FeedEntity, Long> {
     String findUserIdByFeedId(Long feedId);
 
     List<Long> findFeedIdsByUserId(String userId);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM FeedEntity f WHERE f.photoId = :photoId")
+    void deleteAllFeedByPhotoId(Long photoId);
 }

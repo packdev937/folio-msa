@@ -78,4 +78,9 @@ public class FeedPersistenceAdapter implements FeedRepository {
     public List<Long> findFeedIdsByUserId(String userId) {
         return feedJpaRepository.findFeedIdsByUserId(userId);
     }
+
+    @Override
+    public void deleteAllFeedByPhotoId(Long photoId) {
+        feedJpaRepository.deleteAllFeedByPhotoId(photoId);
+    }
 }

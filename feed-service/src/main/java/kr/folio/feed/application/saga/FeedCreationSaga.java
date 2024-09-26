@@ -47,9 +47,8 @@ public class FeedCreationSaga implements SagaStep<PhotoCreatedExternalEvent> {
 
     @Override
     public void rollback(PhotoCreatedExternalEvent event) {
-        // 롤백 로직: 피드가 잘못 생성된 경우 삭제 등의 작업을 수행
         log.info("Rolling back feed creation for event: {}", event);
-        // 피드 롤백 로직 구현
-        // todo : 다시 이벤트를 발행해야 하나?
+
+        feedApplicationUseCase.deleteAllFeedByPhotoId(event.getAggregateId());
     }
 }

@@ -43,6 +43,12 @@ public class FeedApplicationService implements FeedApplicationUseCase {
     }
 
     @Override
+    public DeleteFeedResponse deleteAllFeedByPhotoId(Long photoId) {
+
+        return feedApplicationHandler.deleteAllFeedByPhotoId(photoId);
+    }
+
+    @Override
     public List<Long> retrieveFeedIdsByUserId(String userId) {
         return feedApplicationHandler.retrieveFeedIdsByUserId(userId);
     }
