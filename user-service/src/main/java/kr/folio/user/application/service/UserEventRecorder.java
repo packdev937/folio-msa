@@ -30,7 +30,7 @@ public class UserEventRecorder {
             String payload = createPayload(event);
 
             UserOutboxEntity outboxEvent = UserOutboxEntity.builder()
-	.id(UUID.randomUUID())
+	.outboxId(UUID.randomUUID())
 	.sagaId(event.getSagaId())
 	.eventType(event.getEventType())
 	.payload(payload)

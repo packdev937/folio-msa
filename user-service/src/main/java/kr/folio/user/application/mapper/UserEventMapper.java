@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class UserEventMapper {
 
     public UserDeletedExternalEvent toDeletedExternalEvent(User user) {
-        return new UserDeletedExternalEvent(user.getId(), UUID.randomUUID(), LocalDateTime.now());
+        return new UserDeletedExternalEvent(user.getFolioId(), UUID.randomUUID(), LocalDateTime.now());
     }
 }

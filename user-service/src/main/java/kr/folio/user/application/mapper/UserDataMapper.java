@@ -14,18 +14,18 @@ public class UserDataMapper {
 
     public User toDomain(CreateUserRequest createUserRequest) {
         return User.builder()
-            .id(createUserRequest.id())
+            .folioId(createUserRequest.id())
             .nickname(createUserRequest.nickname())
             .birthday(createUserRequest.birthday())
             .build();
     }
 
     public CreateUserResponse toCreateResponse(User user, String message) {
-        return new CreateUserResponse(user.getId(), message);
+        return new CreateUserResponse(user.getFolioId(), message);
     }
 
     public UpdateUserResponse toUpdateResponse(User user, String message) {
-        return new UpdateUserResponse(user.getId(), message);
+        return new UpdateUserResponse(user.getFolioId(), message);
     }
 
     public UserHomeResponse toRetrieveUserHomeResponse(UserProfileResponse userProfileResponse,

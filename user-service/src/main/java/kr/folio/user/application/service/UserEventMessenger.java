@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -27,6 +26,7 @@ public class UserEventMessenger {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendEvent(UserDeletedExternalEvent event) {
+        log.info("Sending Outbox Event: {} at {}", event.getEventType(), this.getClass().getSimpleName());
         List<UserOutboxEntity> outboxes = userOutboxRepository.findByOutboxStatusAndEventType(
             OutboxStatus.STARTED, event.getEventType()
         );
@@ -35,13 +35,13 @@ public class UserEventMessenger {
             OutboxStatus.FAILED, event.getEventType()
         ));
 
+        log.info("Outboxes: {}", outboxes.size());
         for (UserOutboxEntity outbox : outboxes) {
             try {
 	userDeletedEventKafkaPublisher.publish(
 	    outbox,
 	    this::updateOutboxStatus
 	);
-	outbox.updateOutboxStatus(OutboxStatus.COMPLETED);
 	outbox.updateSagaStatus(SagaStatus.PROCESSING);
 	userOutboxRepository.save(outbox);
             } catch (Exception exception) {
