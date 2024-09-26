@@ -7,7 +7,9 @@ import kr.folio.user.infrastructure.annotation.Adapter;
 import kr.folio.user.persistence.mapper.UserPersistenceMapper;
 import kr.folio.user.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Adapter
 public class UserPersistenceAdapter implements UserRepository {
@@ -17,6 +19,8 @@ public class UserPersistenceAdapter implements UserRepository {
 
     @Override
     public User saveUser(User user) {
+        log.info("Save User with id : {} at {}", user.getId(), this.getClass().getSimpleName());
+
         return userPersistenceMapper.toDomain(
             userJpaRepository.save(
 	userPersistenceMapper.toEntity(user)
@@ -32,7 +36,21 @@ public class UserPersistenceAdapter implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserById(String id) {
+    public Optional<User> findUserByFolioId(String folioId) {
+        return Optional.ofNullable(
+            userPersistenceMapper.toDomain(
+	userJpaRepository.findByFolioId(folioId).orElse(null)
+            )
+        );
+    }
+
+    @Override
+    public void deleteUserByFolioId(String requestUserId) {
+        userJpaRepository.deleteByFolioId(requestUserId);
+    }
+
+    @Override
+    public Optional<User> findUserById(Long id) {
         return Optional.ofNullable(
             userPersistenceMapper.toDomain(
 	userJpaRepository.findById(id).orElse(null)

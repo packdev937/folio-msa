@@ -51,13 +51,13 @@ public class UserApplicationHandlerMockTest {
     void 홈_화면을_조회한다() {
         // Given
         User mockUser = User.builder()
-            .id("packdev937")
+            .folioId("packdev937")
             .nickname("admin")
             .profileImageUrl("profileUrl")
             .build();
 
         UserProfileResponse mockUserProfile = new UserProfileResponse(
-            mockUser.getId(),
+            mockUser.getFolioId(),
             mockUser.getNickname(),
             mockUser.getProfileImageUrl()
         );
@@ -71,16 +71,16 @@ public class UserApplicationHandlerMockTest {
         );
 
         // Mocking the methods
-        when(userRepository.findUserById(mockUser.getId())).thenReturn(Optional.of(mockUser));
+        when(userRepository.findUserByFolioId(mockUser.getFolioId())).thenReturn(Optional.of(mockUser));
         // Private 메소드라도 동작을 정의해주어야 합니다.
-        when(userApplicationHandler.retrieveUserProfile(mockUser.getId())).thenReturn(
+        when(userApplicationHandler.retrieveUserProfile(mockUser.getFolioId())).thenReturn(
             mockUserProfile);
-        when(feedServiceClient.retrieveFeeds(mockUser.getId())).thenReturn(mockFeedsResponse);
+        when(feedServiceClient.retrieveFeeds(mockUser.getFolioId())).thenReturn(mockFeedsResponse);
         when(userDataMapper.toRetrieveUserHomeResponse(mockUserProfile, mockFeedsResponse))
             .thenReturn(new UserHomeResponse(mockUserProfile, mockFeedsResponse));
 
         // When
-        UserHomeResponse response = userApplicationHandler.retrieveUserHome(mockUser.getId());
+        UserHomeResponse response = userApplicationHandler.retrieveUserHome(mockUser.getFolioId());
 
         // Then
         assertNotNull(response);
@@ -92,27 +92,27 @@ public class UserApplicationHandlerMockTest {
     void 예외를_발생한다() {
         // Given
         User mockUser = User.builder()
-            .id("packdev937")
+            .folioId("packdev937")
             .nickname("admin")
             .profileImageUrl("profileUrl")
             .build();
 
         UserProfileResponse mockUserProfile = new UserProfileResponse(
-            mockUser.getId(),
+            mockUser.getFolioId(),
             mockUser.getNickname(),
             mockUser.getProfileImageUrl()
         );
 
         // Mocking the methods
-        when(userRepository.findUserById(mockUser.getId())).thenReturn(Optional.of(mockUser));
-        when(userApplicationHandler.retrieveUserProfile(mockUser.getId())).thenReturn(
+        when(userRepository.findUserByFolioId(mockUser.getFolioId())).thenReturn(Optional.of(mockUser));
+        when(userApplicationHandler.retrieveUserProfile(mockUser.getFolioId())).thenReturn(
             mockUserProfile);
-        when(feedServiceClient.retrieveFeeds(mockUser.getId())).thenThrow(FeignException.class);
+        when(feedServiceClient.retrieveFeeds(mockUser.getFolioId())).thenThrow(FeignException.class);
         when(userDataMapper.toRetrieveUserHomeResponse(mockUserProfile, null))
             .thenReturn(new UserHomeResponse(mockUserProfile, null));
 
         // When
-        UserHomeResponse response = userApplicationHandler.retrieveUserHome(mockUser.getId());
+        UserHomeResponse response = userApplicationHandler.retrieveUserHome(mockUser.getFolioId());
 
         // Then
         assertNotNull(response);

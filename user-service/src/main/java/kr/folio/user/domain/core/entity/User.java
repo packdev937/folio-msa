@@ -1,6 +1,7 @@
 package kr.folio.user.domain.core.entity;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,14 +11,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public class User {
 
-    private String id;
+    private Long id;
+    private String folioId;
     private String nickname;
     private String message;
     private String profileImageUrl;
     private LocalDate birthday;
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFolioId(String folioId) {
+        this.folioId = folioId;
     }
 
     public void updateNickname(String nickname) {

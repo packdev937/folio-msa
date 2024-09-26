@@ -1,10 +1,14 @@
 package kr.folio.user.persistence.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -26,14 +30,26 @@ import lombok.NoArgsConstructor;
 public class UserOutboxEntity extends BaseEntity {
 
     @Id
-    private UUID id;
+    @Column(name = "user_outbox_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private UUID outboxId;
+
     private UUID sagaId;
+
     private LocalDateTime processedAt;
+
+    @Column(nullable = false)
     private String eventType;
+
+    @Column(nullable = false)
     @Lob
     private String payload;
+
     @Enumerated(EnumType.STRING)
     private OutboxStatus outboxStatus;
+
     @Enumerated(EnumType.STRING)
     private SagaStatus sagaStatus;
 

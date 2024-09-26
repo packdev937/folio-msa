@@ -256,7 +256,7 @@ class UserControllerIntegrationTest {
     void 유저_홈_조회_테스트() {
         // Given
         User user = User.builder()
-            .id("packdev937")
+            .folioId("packdev937")
             .nickname("admin")
             .profileImageUrl("https://packdev937.s3.ap-northeast-2.amazonaws.com/profile/2021/07/01/1.jpg")
             .build();
@@ -270,11 +270,11 @@ class UserControllerIntegrationTest {
             )))
             .build();
 
-        when(userApplicationUseCase.retrieveUserHome(user.getId())).thenReturn(response);
+        when(userApplicationUseCase.retrieveUserHome(user.getFolioId())).thenReturn(response);
 
         // When & Then
         webTestClient.get().uri("/users/home")
-            .header("X-USER-ID", user.getId())  // 헤더로 사용자 ID 설정
+            .header("X-USER-ID", user.getFolioId())  // 헤더로 사용자 ID 설정
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
@@ -286,7 +286,7 @@ class UserControllerIntegrationTest {
             .jsonPath("$.feeds.feeds[1].photoImageUrl").isEqualTo("photoImageUrl2") // 두 번째 피드 이미지 URL 확인
             .jsonPath("$.feeds.feeds[2].photoImageUrl").isEqualTo("photoImageUrl3"); // 세 번째 피드 이미지 URL 확인
 
-        verify(userApplicationUseCase).retrieveUserHome(user.getId());
+        verify(userApplicationUseCase).retrieveUserHome(user.getFolioId());
     }
 
 
@@ -294,18 +294,18 @@ class UserControllerIntegrationTest {
     void 유저_마이페이지_조회_테스트() {
         // Given
         User user = User.builder()
-            .id("packdev937")
+            .folioId("packdev937")
             .nickname("admin")
             .birthday(LocalDate.of(1999, 3, 27))
             .build();
 
         UserProfileResponse response = UserProfileResponse.of(user);
 
-        when(userApplicationUseCase.retrieveUserMyPage(user.getId())).thenReturn(response);
+        when(userApplicationUseCase.retrieveUserMyPage(user.getFolioId())).thenReturn(response);
 
         // When & Then
         webTestClient.get().uri("/users/mypage")
-            .header("X-USER-ID", user.getId())
+            .header("X-USER-ID", user.getFolioId())
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
@@ -314,6 +314,6 @@ class UserControllerIntegrationTest {
             .jsonPath("$.nickname").isEqualTo(user.getNickname())
             .jsonPath("$.profileImageUrl").isEqualTo(user.getProfileImageUrl());
 
-        verify(userApplicationUseCase).retrieveUserMyPage(user.getId());
+        verify(userApplicationUseCase).retrieveUserMyPage(user.getFolioId());
     }
 }

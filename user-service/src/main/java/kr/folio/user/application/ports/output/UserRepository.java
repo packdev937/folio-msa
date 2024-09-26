@@ -7,9 +7,13 @@ public interface UserRepository {
 
     User saveUser(User user);
 
-    Optional<User> findUserById(String id);
+    Optional<User> findUserById(Long id);
 
     Optional<User> findUserByNickname(String nickname);
 
     void deleteUser(User user);
+
+    Optional<User> findUserByFolioId(String id);
+
+    void deleteUserByFolioId(String requestUserId);
 }

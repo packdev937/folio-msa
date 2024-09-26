@@ -11,7 +11,7 @@ public record UserProfileResponse(
 ) {
 
     public static UserProfileResponse of(User user) {
-        return new UserProfileResponse(user.getId(), user.getNickname(), user.getProfileImageUrl()
+        return new UserProfileResponse(user.getFolioId(), user.getNickname(), user.getProfileImageUrl()
         );
     }
 }

@@ -3,6 +3,7 @@ package kr.folio.user.application.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import kr.folio.user.application.handler.UserApplicationHandler;
 import kr.folio.user.application.mapper.UserDataMapper;
 import kr.folio.user.application.mapper.UserEventMapper;
@@ -68,9 +69,9 @@ class UserApplicationHandlerTest {
         assertEquals("가입이 완료 되었습니다.", response.message());
         assertEquals(createUserRequest.id(), response.userId());
 
-        User savedUser = userRepository.findUserById(response.userId()).orElse(null);
+        User savedUser = userRepository.findUserByFolioId(response.userId()).orElse(null);
         assertNotNull(savedUser);
-        assertEquals(createUserRequest.id(), savedUser.getId());
+        assertEquals(createUserRequest.id(), savedUser.getFolioId());
     }
 
     @Test
@@ -78,7 +79,13 @@ class UserApplicationHandlerTest {
         // Given
         String userId = "packdev937";
         userRepository.saveUser(
-            new User(userId, "admin", "message", "profileUrl", LocalDate.of(1999, 3, 27)));
+            User.builder()
+	.folioId(userId)
+	.nickname("admin")
+	.message("message")
+	.profileImageUrl("profileUrl")
+	.birthday(LocalDate.of(1999, 3, 27))
+	.build());
         String newNickname = "root";
 
         // When
@@ -90,7 +97,7 @@ class UserApplicationHandlerTest {
         assertEquals("회원 정보가 수정되었습니다.", response.message());
         assertEquals(userId, response.userId());
 
-        User updatedUser = userRepository.findUserById(userId)
+        User updatedUser = userRepository.findUserByFolioId(userId)
             .orElseThrow(() -> new UserNotFoundException());
         assertEquals(newNickname, updatedUser.getNickname());
     }
@@ -100,7 +107,13 @@ class UserApplicationHandlerTest {
         // Given
         String userId = "packdev937";
         userRepository.saveUser(
-            new User(userId, "admin", "message", "profileUrl", LocalDate.of(1999, 3, 27)));
+            User.builder()
+	.folioId(userId)
+	.nickname("admin")
+	.message("message")
+	.profileImageUrl("profileUrl")
+	.birthday(LocalDate.of(1999, 3, 27))
+	.build());
         String newMessage = "Hello World!";
 
         // When
@@ -112,7 +125,7 @@ class UserApplicationHandlerTest {
         assertEquals("회원 정보가 수정되었습니다.", response.message());
         assertEquals(userId, response.userId());
 
-        User updatedUser = userRepository.findUserById(userId)
+        User updatedUser = userRepository.findUserByFolioId(userId)
             .orElseThrow(() -> new UserNotFoundException());
         assertEquals(newMessage, updatedUser.getMessage());
     }
@@ -144,7 +157,15 @@ class UserApplicationHandlerTest {
         // Given
         String userId = "packdev937";
         userRepository.saveUser(
-            new User(userId, "admin", "message", "profileUrl", LocalDate.of(1999, 3, 27)));
+            userRepository.saveUser(
+	User.builder()
+	    .folioId(userId)
+	    .nickname("admin")
+	    .message("message")
+	    .profileImageUrl("profileUrl")
+	    .birthday(LocalDate.of(1999, 3, 27))
+	    .build()));
+
         LocalDate newBirthday = LocalDate.of(1999, 3, 28);
 
         // When
@@ -156,7 +177,7 @@ class UserApplicationHandlerTest {
         assertEquals("회원 정보가 수정되었습니다.", response.message());
         assertEquals(userId, response.userId());
 
-        User updatedUser = userRepository.findUserById(userId)
+        User updatedUser = userRepository.findUserByFolioId(userId)
             .orElseThrow(() -> new UserNotFoundException());
         assertEquals(newBirthday, updatedUser.getBirthday());
     }
@@ -165,7 +186,15 @@ class UserApplicationHandlerTest {
     void 유저를_삭제한다() {
         // Given
         String userId = "packdev937";
-        User user = new User(userId, "admin", "message", "profileUrl", LocalDate.of(1999, 3, 27));
+        User user = userRepository.saveUser(
+            User.builder()
+	.folioId(userId)
+	.nickname("admin")
+	.message("message")
+	.profileImageUrl("profileUrl")
+	.birthday(LocalDate.of(1999, 3, 27))
+	.build());
+
         userRepository.saveUser(user);
 
         // When
@@ -176,13 +205,13 @@ class UserApplicationHandlerTest {
         assertEquals("회원 탈퇴 처리가 되었습니다.", response.message());
 
         // 삭제된 유저가 데이터베이스에 없는지 확인
-        assertFalse(userRepository.findUserById(userId).isPresent());
+        assertFalse(userRepository.findUserByFolioId(userId).isPresent());
     }
 
     @Test
     void 중복된_아이디를_검증한다() {
         // Given
-        User user = User.builder().id("packdev937").nickname("admin").build();
+        User user = User.builder().folioId("packdev937").nickname("admin").build();
 
         userRepository.saveUser(user);
         String duplicatedId = "packdev937";
@@ -202,7 +231,7 @@ class UserApplicationHandlerTest {
     @Test
     void 중복된_닉네임을_검증한다() {
         // Given
-        User user = User.builder().id("packdev937").nickname("admin").build();
+        User user = User.builder().folioId("packdev937").nickname("admin").build();
 
         userRepository.saveUser(user);
         String duplicatedNickname = "admin";

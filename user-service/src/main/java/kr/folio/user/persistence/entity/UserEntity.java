@@ -8,41 +8,39 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.UUID;
-import kr.folio.user.domain.core.vo.OAuthProvider;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tb_users")
 @Entity
 public class UserEntity extends BaseEntity {
 
     @Id
-    @Column(name = "user_id")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "user_nickname")
+    @Column(name = "user_folio_id", unique = true, nullable = false)
+    private String folioId;
+
+    @Column(name = "user_nickname", unique = true, nullable = false)
     private String nickname;
 
+    @Builder.Default
     @Column(name = "user_message")
     private String message = "";
 
+    @Builder.Default
     @Column(name = "user_profile_image_url")
     private String profileImageUrl = "DEFAULT_URL";
 
-    @Column(name = "user_birthday")
+    @Column(name = "user_birthday", nullable = false)
     private LocalDate birthday;
-
-    @Builder
-    public UserEntity(String id, String nickname, String message, String profileImageUrl,
-        LocalDate birthday) {
-        this.id = id;
-        this.nickname = nickname;
-        this.message = message;
-        this.profileImageUrl = profileImageUrl;
-        this.birthday = birthday;
-    }
 }

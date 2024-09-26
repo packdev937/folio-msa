@@ -55,8 +55,8 @@ public class UserApplicationHandler {
             throw new UserNotFoundException();
         }
 
-        log.info("Returning CreatedUserEvent for user id: {}", createUserRequest.id());
-        return userDataMapper.toCreateResponse(user, "가입이 완료 되었습니다.");
+        log.info("Create User with id : {}", savedUser.getFolioId());
+        return userDataMapper.toCreateResponse(savedUser, "가입이 완료 되었습니다.");
     }
 
     public UserHomeResponse retrieveUserHome(String requestUserId) {
@@ -80,7 +80,7 @@ public class UserApplicationHandler {
     }
 
     public ValidateUserResponse validateDuplicatedId(String id) {
-        userRepository.findUserById(id).ifPresent(user -> {
+        userRepository.findUserByFolioId(id).ifPresent(user -> {
             throw new UserAlreadyExistsException();
         });
 
@@ -150,7 +150,7 @@ public class UserApplicationHandler {
     public DeleteUserResponse deleteUser(String requestUserId) {
         User user = findUserByIdOrThrow(requestUserId);
 
-        userRepository.deleteUser(user);
+        userRepository.deleteUserByFolioId(requestUserId);
 
         userEventService.publishEvent(userEventMapper.toDeletedExternalEvent(user));
 
@@ -159,6 +159,6 @@ public class UserApplicationHandler {
 
 
     private User findUserByIdOrThrow(String id) {
-        return userRepository.findUserById(id).orElseThrow(UserNotFoundException::new);
+        return userRepository.findUserByFolioId(id).orElseThrow(UserNotFoundException::new);
     }
 }

@@ -18,15 +18,15 @@ public class FakeUserRepository implements UserRepository {
             usersByNickname.remove(existingUser.getNickname());
         }
 
-        usersById.put(user.getId(), user);
+        usersById.put(user.getFolioId(), user);
         usersByNickname.put(user.getNickname(), user);
 
         return user;
     }
 
     @Override
-    public Optional<User> findUserById(String id) {
-        return Optional.ofNullable(usersById.get(id));
+    public Optional<User> findUserById(Long id) {
+        return null;
     }
 
     @Override
@@ -38,5 +38,17 @@ public class FakeUserRepository implements UserRepository {
     public void deleteUser(User user) {
         usersById.remove(user.getId());
         usersByNickname.remove(user.getNickname());
+    }
+
+    @Override
+    public Optional<User> findUserByFolioId(String id) {
+        return usersById.values().stream()
+            .filter(user -> user.getFolioId().equals(id))
+            .findFirst();
+    }
+
+    @Override
+    public void deleteUserByFolioId(String requestUserId) {
+        usersById.remove(requestUserId);
     }
 }

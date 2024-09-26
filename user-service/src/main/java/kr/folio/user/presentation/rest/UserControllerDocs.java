@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import reactor.core.publisher.Mono;
 
 @Tag(name = "유저 API", description = "유저와 관련된 API")
 @Validated
@@ -32,55 +33,55 @@ public interface UserControllerDocs {
 
     @Operation(summary = "유저 생성", description = "유저를 생성 합니다.")
     @PostMapping
-    ResponseEntity<CreateUserResponse> createUser(
+    Mono<ResponseEntity<CreateUserResponse>> createUser(
         @RequestBody CreateUserRequest createUserRequest);
 
     @Operation(summary = "아이디 중복 검증", description = "아이디 중복을 검증 합니다.")
     @GetMapping("/validation/id")
-    ResponseEntity<ValidateUserResponse> validateUserId(
+    Mono<ResponseEntity<ValidateUserResponse>> validateUserId(
         @RequestParam(name = "id") String id);
 
     @Operation(summary = "닉네임 중복 검증", description = "닉네임 중복을 검증 합니다.")
     @GetMapping("/validation/nickname")
-    ResponseEntity<ValidateUserResponse> validateUserNickname(
+    Mono<ResponseEntity<ValidateUserResponse>> validateUserNickname(
         @RequestParam(name = "nickname") String nickname);
 
     @Operation(summary = "유저 닉네임 변경", description = "유저 닉네임을 변경합니다.")
     @PostMapping("/nickname")
-    ResponseEntity<UpdateUserResponse> updateUserNickname(
+    Mono<ResponseEntity<UpdateUserResponse>> updateUserNickname(
         @CurrentUserId String requestUserId,
         @Valid @RequestBody UpdateNicknameRequest updateNicknameRequest);
 
     @Operation(summary = "유저 생일 변경", description = "유저 생일을 변경합니다.")
     @PostMapping("/birthday")
-    ResponseEntity<UpdateUserResponse> updateUserBirthday(
+    Mono<ResponseEntity<UpdateUserResponse>> updateUserBirthday(
         @CurrentUserId String requestUserId,
         @Valid @RequestBody UpdateBirthdayRequest updateBirthdayRequest);
 
     @Operation(summary = "유저 메시지 변경", description = "유저 상태 메시지를 변경합니다.")
     @PostMapping("/message")
-    ResponseEntity<UpdateUserResponse> updateUserMessage(
+    Mono<ResponseEntity<UpdateUserResponse>> updateUserMessage(
         @CurrentUserId String requestUserId,
         @Valid @RequestBody UpdateMessageRequest updateMessageRequest);
 
     @Operation(summary = "유저 프로필 사진 변경", description = "유저 프로필 사진을 변경합니다.")
     @PostMapping("/profile")
-    ResponseEntity<UpdateUserResponse> updateUserProfileImage(
+    Mono<ResponseEntity<UpdateUserResponse>> updateUserProfileImage(
         @CurrentUserId String requestUserId,
         @RequestPart UpdateProfileImageUrlRequest updateProfileImageUrlRequest);
 
     @Operation(summary = "유저 삭제", description = "유저를 삭제합니다.")
     @DeleteMapping
-    ResponseEntity<DeleteUserResponse> deleteUser(
+    Mono<ResponseEntity<DeleteUserResponse>> deleteUser(
         @CurrentUserId String requestUserId);
 
     @Operation(summary = "유저 홈 조회", description = "유저 홈을 조회합니다.")
     @GetMapping("/home")
-    ResponseEntity<UserHomeResponse> retrieveUserHome(
+    Mono<ResponseEntity<UserHomeResponse>> retrieveUserHome(
         @CurrentUserId String requestUserId);
 
     @Operation(summary = "유저 마이페이지 조회", description = "유저 마이페이지를 조회합니다.")
     @GetMapping("/mypage")
-    ResponseEntity<UserProfileResponse> retrieveUserMyPage(
+    Mono<ResponseEntity<UserProfileResponse>> retrieveUserMyPage(
         @CurrentUserId String requestUserId);
 }
