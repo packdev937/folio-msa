@@ -25,6 +25,11 @@ repositories {
 
 dependencies {}
 
+
+tasks.named('bootJar') {
+    enabled = false
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

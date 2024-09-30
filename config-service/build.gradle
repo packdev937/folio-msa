@@ -33,3 +33,16 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+String jarName = "config-service.jar"
+
+tasks.named("bootJar") {
+    bootJar.getArchiveFileName().set(jarName)
+
+    bootJar.doLast(task -> {
+        copy(copySpec -> {
+            copySpec.from("build/libs/" + jarName)
+            copySpec.into("../build/libs")
+        })
+    })
+}

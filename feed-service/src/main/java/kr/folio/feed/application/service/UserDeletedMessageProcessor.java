@@ -4,7 +4,6 @@ import java.util.List;
 import kr.folio.common.domain.core.event.user.UserDeletedExternalEvent;
 import kr.folio.feed.application.ports.input.FeedApplicationUseCase;
 import kr.folio.feed.application.ports.input.UserDeletedMessageListener;
-import kr.folio.feed.domain.core.event.DeleteUserEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

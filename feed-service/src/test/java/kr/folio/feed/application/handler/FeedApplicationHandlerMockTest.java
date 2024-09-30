@@ -1,20 +1,19 @@
 package kr.folio.feed.application.handler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import kr.folio.feed.application.mapper.FeedDataMapper;
+import kr.folio.feed.application.mapper.FeedEventMapper;
 import kr.folio.feed.application.ports.output.FeedRepository;
-import kr.folio.feed.domain.core.event.DeleteFeedEvent;
+import kr.folio.feed.application.service.FeedEventService;
 import kr.folio.feed.domain.service.FeedDomainUseCase;
 import kr.folio.feed.infrastructure.client.FollowServiceClient;
 import kr.folio.feed.infrastructure.messaging.kafka.publisher.PhotoDeleteExternalEventKafkaPublisher;
 import kr.folio.feed.persistence.entity.FeedOutboxEntity;
-import kr.folio.feed.presentation.dto.event.DeleteFeedEventDTO;
 import kr.folio.feed.presentation.dto.response.DeleteFeedResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,10 +33,13 @@ public class FeedApplicationHandlerMockTest {
     private FeedDataMapper feedDataMapper;
 
     @Mock
+    private FeedEventService feedEventService;
+
+    @Mock
     private FollowServiceClient followServiceClient;
 
     @Mock
-    private PhotoDeleteExternalEventKafkaPublisher deleteFeedEventKafkaPublisher;
+    private FeedEventMapper feedEventMapper;
 
     @InjectMocks
     private FeedApplicationHandler feedApplicationHandler;
@@ -58,8 +60,6 @@ public class FeedApplicationHandlerMockTest {
         when(feedRepository.findPhotoIdByFeedId(feedId)).thenReturn(photoId);
         when(feedRepository.countFeedByPhotoId(photoId)).thenReturn(feedCount);
         when(feedDomainService.isPhotoDeletable(feedCount)).thenReturn(true);
-        when(feedDomainService.createDeleteFeedEvent(photoId)).thenReturn(new DeleteFeedEvent(
-            new DeleteFeedEventDTO(photoId), null));
         DeleteFeedResponse response = feedApplicationHandler.deleteFeed(feedId);
 
         // Then
@@ -71,8 +71,7 @@ public class FeedApplicationHandlerMockTest {
         verify(feedRepository).deleteFeedById(feedId);
         verify(feedRepository).countFeedByPhotoId(photoId);
         verify(feedDomainService).isPhotoDeletable(feedCount);
-        verify(feedDomainService).createDeleteFeedEvent(photoId);
-        verify(deleteFeedEventKafkaPublisher).publish(any(FeedOutboxEntity.class), any());
+        verify(feedEventService).publishEvent(any());
     }
 
     @Test

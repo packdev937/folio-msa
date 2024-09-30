@@ -21,6 +21,7 @@ import kr.folio.photo.presentation.dto.response.RetrievePhotoResponse;
 import kr.folio.photo.presentation.dto.response.UpdatePhotoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 class PhotoApplicationHandlerTest {
 
@@ -35,7 +36,12 @@ class PhotoApplicationHandlerTest {
         photoDomainService = new PhotoDomainService();
         photoRepository = new FakePhotoRepository();
         photoDataMapper = new PhotoDataMapper();
-        photoEventService= new PhotoEventService(null);
+        photoEventService = new PhotoEventService(new ApplicationEventPublisher() {
+            @Override
+            public void publishEvent(Object event) {
+	// Do nothing
+            }
+        });
         photoApplicationHandler = new PhotoApplicationHandler(photoDomainService, photoRepository,
             photoDataMapper, photoEventService);
     }

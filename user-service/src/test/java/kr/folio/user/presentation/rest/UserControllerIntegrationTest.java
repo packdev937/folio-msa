@@ -279,7 +279,7 @@ class UserControllerIntegrationTest {
             .exchange()
             .expectStatus().isOk()
             .expectBody()
-            .jsonPath("$.userProfile.id").isEqualTo(user.getId()) // 유저 프로필 ID 확인
+            .jsonPath("$.userProfile.id").isEqualTo(user.getFolioId()) // 유저 프로필 ID 확인
             .jsonPath("$.userProfile.nickname").isEqualTo(user.getNickname()) // 유저 닉네임 확인
             .jsonPath("$.userProfile.profileImageUrl").isEqualTo(user.getProfileImageUrl()) // 유저 프로필 이미지 확인
             .jsonPath("$.feeds.feeds[0].photoImageUrl").isEqualTo("photoImageUrl1") // 첫 번째 피드 이미지 URL 확인
@@ -310,7 +310,7 @@ class UserControllerIntegrationTest {
             .exchange()
             .expectStatus().isOk()
             .expectBody()
-            .jsonPath("$.id").isEqualTo(user.getId())
+            .jsonPath("$.id").isEqualTo(user.getFolioId())
             .jsonPath("$.nickname").isEqualTo(user.getNickname())
             .jsonPath("$.profileImageUrl").isEqualTo(user.getProfileImageUrl());
 

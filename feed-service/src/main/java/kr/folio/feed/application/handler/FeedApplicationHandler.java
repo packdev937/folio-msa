@@ -33,6 +33,7 @@ public class FeedApplicationHandler {
     private final FeedDomainUseCase feedDomainUseCase;
     private final FeedRepository feedRepository;
     private final FeedDataMapper feedDataMapper;
+
     private final FollowServiceClient followServiceClient;
 
     private final FeedEventService feedEventService;
