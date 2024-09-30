@@ -27,14 +27,14 @@ else
     echo "Docker-compose is already installed"
 fi
 
-# Load environment variables
-if [ -f /home/ec2-user/.env ]; then
-    echo "Loading environment variables from .env file..."
-    export $(cat /home/ec2-user/.env | xargs)
-else
-    echo ".env file not found!"
-    exit 1
-fi
+## Load environment variables
+#if [ -f /home/ec2-user/.env ]; then
+#    echo "Loading environment variables from .env file..."
+#    export $(cat /home/ec2-user/.env | xargs)
+#else
+#    echo ".env file not found!"
+#    exit 1
+#fi
 
 # Define container names
 NGINX_CONF="/home/ec2-user/data/nginx/app.conf"
@@ -44,19 +44,17 @@ USER_CONTAINER="user-service"
 PHOTO_CONTAINER="photo-service"
 QR_CONTAINER="qr-service"
 FEED_CONTAINER="feed-service"
+FOLLOW_CONTAINER="follow-service"
 
 # Start services
 echo "Starting services..."
-docker-compose -f /home/ec2-user/docker-compose.yml up -d $GATEWAY_CONTAINER $USER_CONTAINER $PHOTO_CONTAINER $QR_CONTAINER $FEED_CONTAINER
+docker-compose -f /home/ec2-user/docker-compose.yml up -d $GATEWAY_CONTAINER $USER_CONTAINER $PHOTO_CONTAINER $QR_CONTAINER $FEED_CONTAINER $FOLLOW_CONTAINER
 
 # Wait for the services to be healthy before proceeding
 sleep 10
+#
+#if [ -z "$RUNNING_NGINX" ]; then
+#    echo "Starting Nginx..."
+#    docker-compose -f /home/ec2-user/docker-compose.yml up -d nginx
+#fi
 
-if [ -z "$RUNNING_NGINX" ]; then
-    echo "Starting Nginx..."
-    docker-compose -f /home/ec2-user/docker-compose.yml up -d nginx
-fi
-
-# Restart nginx and selenium to ensure they're using the latest configuration
-docker-compose -f /home/ec2-user/docker-compose.yml restart nginx
-docker-compose -f /home/ec2-user/docker-compose.yml restart selenium

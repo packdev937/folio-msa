@@ -1,71 +1,118 @@
 version: '3'
 services:
-  nginx:
-    container_name: nginx
-    image: nginx:1.15-alpine
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/nginx/log:/var/log/nginx
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    depends_on:
-      - "gateway-service"
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+      - "2181:2181"
 
-  gateway-service:
-    container_name: gateway-service
-    image: teamfolio/server
-    env_file:
-      - /home/ec2-user/.env
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  config-server:
+    image: teamfolio/config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - SERVER_PORT=8888
+    networks:
+      - my_network
+
+  eureka-server:
+    image: teamfolio/gateway-service
+    container_name: eureka-server
     ports:
       - "8761:8761"
-    restart: "always"
+    environment:
+      - SERVER_PORT=8761
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-server
+    networks:
+      - my_network
 
   user-service:
-    container_name: user-service
     image: teamfolio/user-service
-    env_file:
-       - /home/ec2-user/.env
+    container_name: user-service
     ports:
-      - "8081:8081"
-    restart: "always"
+      - "0:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_APPLICATION_NAME=USER-SERVICE
+    depends_on:
+      - eureka-server
+    networks:
+      - my_network
 
   photo-service:
-    container_name: photo-service
     image: teamfolio/photo-service
-    env_file:
-      - /home/ec2-user/.env
+    container_name: photo-service
     ports:
-      - "8082:8082"
-    restart: "always"
-
-  qr-service:
-    container_name: qr-service
-    image: teamfolio/qr-service
-    env_file:
-      - /home/ec2-user/.env
-    ports:
-      - "8082:8082"
-    restart: "always"
+      - "0:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_APPLICATION_NAME=photo-service
+    depends_on:
+      - eureka-server
+    networks:
+      - my_network
 
   feed-service:
-    container_name: feed-service
     image: teamfolio/feed-service
-    env_file:
-      - /home/ec2-user/.env
+    container_name: feed-service
     ports:
-      - "8083:8083"
-    restart: "always"
+      - "0:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_APPLICATION_NAME=photo-service
+    depends_on:
+      - eureka-server
+    networks:
+      - my_network
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+  qr-service:
+    image: teamfolio/qr-service
+    container_name: qr-service
+    ports:
+      - "0:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_APPLICATION_NAME=photo-service
+    depends_on:
+      - eureka-server
+    networks:
+      - my_network
+
+  follow-service:
+    image: teamfolio/follow-service
+    container_name: follow-service
+    ports:
+      - "0:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_APPLICATION_NAME=photo-service
+    depends_on:
+      - eureka-server
+    networks:
+      - my_network
 
 networks:
-  default:
+  my_network:
     driver: bridge
